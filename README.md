@@ -108,11 +108,3 @@ The project pins Lean and Mathlib versions in `lean-toolchain` and
 ## License
 
 This project is released under the [MIT License](LICENSE).
-
-## 中文说明
-
-这是一个完全独立的弱凸优化下界 Lean 4 验证包，Lean 层面只依赖 Mathlib。
-主定理验证精确的函数值与完整集合值次微分 oracle 下的确定性查询复杂度下界，
-并将停机性度量连接到真实 Moreau 包络的 Fréchet 梯度。运行上面的构建命令，
-或在 Windows 中运行 `VERIFY.ps1`，即可复核编译、主定理公理依赖、占位证明和
-私有路径检查。
