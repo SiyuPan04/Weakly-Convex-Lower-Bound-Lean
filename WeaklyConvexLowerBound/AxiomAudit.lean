@@ -1,0 +1,64 @@
+import WeaklyConvexLowerBound.UnconditionalMain
+import WeaklyConvexLowerBound.PaperOutput
+import WeaklyConvexLowerBound.OutputAugmentation
+import WeaklyConvexLowerBound.ProgressDifferentiability
+import WeaklyConvexLowerBound.FullSubdiffCharacterization
+import WeaklyConvexLowerBound.ZeroActivationLocality
+import WeaklyConvexLowerBound.ZeroActivationFullFormula
+import WeaklyConvexLowerBound.ZeroActivationFormulaAudit
+import WeaklyConvexLowerBound.ZeroRespectingMain
+import WeaklyConvexLowerBound.UniformResistingOracle
+
+/-!
+# Axiom audit
+
+Run this file after `lake build`.  The commands below make Lean report the
+logical dependencies of the principal checked endpoints.  The verification
+script separately rejects proof placeholders and project-defined axioms.
+-/
+
+open WeaklyConvexLowerBound
+
+/-! ## Unconditional manuscript endpoints and rate -/
+
+#print axioms WeaklyConvexLowerBound.paperProblemClass_fullOracleComplexityAtLeast_unconditional
+#print axioms WeaklyConvexLowerBound.paperT_rate_lower
+#print axioms WeaklyConvexLowerBound.paperProblemClass_fullOracle_lowerBound_and_rate
+#print axioms WeaklyConvexLowerBound.zeroRespectingMain
+
+/-! ## Arbitrary transcript-dependent deterministic output -/
+
+#print axioms WeaklyConvexLowerBound.outputAt_failure_of_fullOracleComplexityAtLeast
+#print axioms WeaklyConvexLowerBound.paperProblemClass_outputAt_failure_before_paperT
+#print axioms WeaklyConvexLowerBound.paperProblemClass_outputAt_failure_at_zero
+#print axioms WeaklyConvexLowerBound.paperProblemClass_outputAt_failure_before_paperT_all
+#print axioms WeaklyConvexLowerBound.paperProblemClass_outputAt_failure_at_paperH
+
+/-! ## Semantic C2 and C3 bridges -/
+
+#print axioms WeaklyConvexLowerBound.hardValue_fullSubdiff_diagonal_locality
+#print axioms WeaklyConvexLowerBound.fullSubdiff_one_positive_hardFormulaReply
+#print axioms WeaklyConvexLowerBound.reachable_fullSubdiff_residual_above
+#print axioms WeaklyConvexLowerBound.hasEVecFDerivAt_psi
+#print axioms WeaklyConvexLowerBound.convexHull_hardFormulaSet_subset_fullSubdiff
+#print axioms WeaklyConvexLowerBound.fullSubdiff_eq_convexHull_hardFormulaSet_of_activation_pos
+#print axioms WeaklyConvexLowerBound.zeroActivationDirectionalDomination_of_fullSubdiff
+#print axioms WeaklyConvexLowerBound.fullSubdiff_eq_convexHull_hardFormulaSet_of_activation_eq_zero
+#print axioms WeaklyConvexLowerBound.fullSubdiff_eq_convexHull_hardFormulaSet
+#print axioms WeaklyConvexLowerBound.positiveNorm_zeroBase_quadratic_upper
+#print axioms WeaklyConvexLowerBound.fullSubdiff_eq_convexHull_hardFormulaSet_via_case_split_audit
+
+/-! ## Literal Moreau envelope and genuine Frechet gradient -/
+
+#print axioms WeaklyConvexLowerBound.hasFDerivAt_ambientPaperScaledHard_moreau
+#print axioms WeaklyConvexLowerBound.ambientPaperScaledHard_gradient_norm_sq
+#print axioms WeaklyConvexLowerBound.paperSelectedStationarity_eq_actualGradientNorm
+#print axioms WeaklyConvexLowerBound.selectedScaledHardProblemClass_subset_paperProblemClass
+
+/-! ## Full oracle, rotation, and resisting construction -/
+
+#print axioms WeaklyConvexLowerBound.fullOracle_rotated_eq_rotateBaseReply
+#print axioms WeaklyConvexLowerBound.CompletedDynamicBatchTable.actual_transcript_and_fullSetZeroRespecting
+#print axioms WeaklyConvexLowerBound.finiteHorizon_uniform_resisting_oracle
+#print axioms WeaklyConvexLowerBound.deterministicComponent_scaledHard_failure_unconditional
+
