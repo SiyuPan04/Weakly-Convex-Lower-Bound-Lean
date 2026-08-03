@@ -1,5 +1,7 @@
 # Weakly Convex Lower Bound — Lean 4 Formalization
 
+[![Lean CI](https://github.com/SiyuPan04/Weakly-Convex-Lower-Bound-Lean/actions/workflows/lean.yml/badge.svg?branch=main)](https://github.com/SiyuPan04/Weakly-Convex-Lower-Bound-Lean/actions/workflows/lean.yml)
+
 This repository is a standalone Lean 4 verification of a deterministic
 first-order oracle lower bound for weakly convex optimization. Its only Lean
 package dependency is
