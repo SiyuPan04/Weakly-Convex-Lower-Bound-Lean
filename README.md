@@ -105,6 +105,10 @@ comes from Mathlib or this package, and rejects private absolute paths.
 The project pins Lean and Mathlib versions in `lean-toolchain` and
 `lake-manifest.json` for reproducible builds.
 
+## License
+
+This project is released under the [MIT License](LICENSE).
+
 ## 中文说明
 
 这是一个完全独立的弱凸优化下界 Lean 4 验证包，Lean 层面只依赖 Mathlib。
