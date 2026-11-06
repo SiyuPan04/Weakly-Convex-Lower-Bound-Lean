@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Free disk space for Lean and mathlib
+        run: |
+          # These preinstalled SDKs are unused by this Lean-only workflow.
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
       - uses: leanprover/lean-action@v1
       - name: Verify manuscript coverage and proof axioms
         run: python3 scripts/check_wclb.py
