@@ -15,4 +15,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@v1
       - name: Verify manuscript coverage and proof axioms
-        run: python3 scripts/check_mp.py
+        run: python3 scripts/check_wclb.py

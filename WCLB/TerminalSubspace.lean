@@ -1,11 +1,11 @@
-import MP.Construction
+import WCLB.Construction
 import WC.DiagonalSubspaces
 
 /-! The literal terminal-subspace clause of Proposition
 `prop:terminal-stationarity`, derived from the proved robust tube bound. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC
 open scoped Classical
 
@@ -44,4 +44,4 @@ theorem terminal_stationarity {M N : ℕ} (hM : 2 ≤ M) (hN : 256 ≤ N)
   ⟨WC.horizon_bound hM hN, terminal_subspace_barrier hM hN hMmax,
     terminal_diagonal_barrier hM hN hMmax⟩
 
-end MP
+end WCLB

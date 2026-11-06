@@ -1,10 +1,10 @@
-import MP.Family
+import WCLB.Family
 
-/-! The prescribed MP fixed-radius family, uniform in ambient dimension,
+/-! The prescribed WCLB fixed-radius family, uniform in ambient dimension,
 discharges every construction premise used in the scaling reduction. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC
 
 theorem uniformFamilies : WC.LowerReduction.UniformFamilies := by
@@ -18,4 +18,4 @@ theorem uniformFamilies : WC.LowerReduction.UniformFamilies := by
   let e := coreEmbedding M N d (by omega : M * N ≤ d)
   exact ⟨chainFamily e hM hN hMmax, rfl, rfl⟩
 
-end MP
+end WCLB

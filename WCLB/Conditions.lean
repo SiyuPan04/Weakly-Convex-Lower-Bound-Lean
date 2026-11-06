@@ -4,12 +4,12 @@ import WC.InitialGap
 import WC.ChainWall
 import WC.CoreFiltration
 
-/-! Exact four unscaled conditions of the MP submission.
+/-! Exact four unscaled conditions of the WCLB manuscript.
 Index `r : ℕ` represents manuscript time `t=r−1`, so `I 0=∅`
 is its `I₋₁` and the next prefix is `I (r+1)`. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open scoped Classical
 
 def coordinateProjection {M N : ℕ} (s : Finset (Fin M × Fin N))
@@ -101,4 +101,4 @@ theorem chainMajorant_conditions_of_terminal {M N : ℕ} (hM : 2 ≤ M) (hN : 25
     simp only [WC.exposedIndices, Finset.mem_filter, Finset.mem_univ, true_and, not_lt] at hi
     omega
 
-end MP
+end WCLB

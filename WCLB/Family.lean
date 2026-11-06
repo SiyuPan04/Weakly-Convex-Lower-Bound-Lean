@@ -1,12 +1,12 @@
-import MP.Prefix
-import MP.RadialOracle
+import WCLB.Prefix
+import WCLB.RadialOracle
 import WC.NormalizedFamily
 
-/-! The concrete MP radial objective with its prescribed radius fills
+/-! The concrete WCLB radial objective with its prescribed radius fills
 every full-oracle hypothesis of the proved rotation framework. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC Filter Topology
 open WC.Rotation.Normalized
 open scoped Classical
@@ -179,4 +179,4 @@ def chainFamily {M N d : ℕ} [NeZero d] (e : Fin M × Fin N ↪ Fin d)
   measurable_oracle := radial_joint_oracle_measurable e hM hN
   measurable_gradient := (radial_joint_gradient_continuous e hM hN).measurable
 
-end MP
+end WCLB

@@ -1,4 +1,4 @@
-import MP.Concentration
+import WCLB.Concentration
 
 /-! Adaptive exponential projection tails from actual stabilizer averaging.
 The query's invariance under the hidden stabilizer is a deterministic
@@ -7,7 +7,7 @@ prefix-dependence identity, and no conditional-law assertion is assumed. -/
 noncomputable section
 open MeasureTheory
 open scoped ENNReal
-namespace MP.Concentration
+namespace WCLB.Concentration
 open WC.Frame
 
 variable (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -157,4 +157,4 @@ theorem adaptive_projection_tail_product {S : Type*} [MeasurableSpace S]
         (query_fixed s) hB ha
     _ = _ := by simp
 
-end MP.Concentration
+end WCLB.Concentration

@@ -1,8 +1,8 @@
 {
-  "source": "mp_snapshot/main.tex",
+  "source": "wclb_snapshot/main.tex",
   "sha256": "29efd2ce9866a9b719b4b5d9865d3b216cacfe23823ce43fdd9114e11f670f13",
-  "goal": "Complete formalization of the MP submission, including its literal logarithmic dimension reduction.",
-  "main_theorem": "MP.main : MP.Model.MainTheorem",
+  "goal": "Formalization of the weakly convex lower bound manuscript, including its literal logarithmic dimension reduction.",
+  "main_theorem": "WCLB.main : WCLB.Model.MainTheorem",
   "status": "proofs_complete",
   "items": [
     {
@@ -12,13 +12,13 @@
       "labels": [],
       "status": "proved",
       "modules": [
-        "MP/Main.lean"
+        "WCLB/Main.lean"
       ],
       "declarations": [
-        "MP.main",
-        "MP.main_explicit"
+        "WCLB.main",
+        "WCLB.main_explicit"
       ],
-      "notes": "The exact main theorem implies the informal asymptotic statement, using the actual prescribed-radius MP hard family."
+      "notes": "The exact main theorem implies the informal asymptotic statement, using the actual prescribed-radius WCLB hard family."
     },
     {
       "environment": "definition",
@@ -29,7 +29,7 @@
       "modules": [
         "WC/Basic.lean",
         "WC/Model.lean",
-        "MP/Model.lean"
+        "WCLB/Model.lean"
       ],
       "declarations": [
         "WC.WeaklyConvex",
@@ -37,7 +37,7 @@
         "WC.GapBound",
         "WC.Admissible",
         "WC.gapBound_iff_inf",
-        "MP.Model.Instance"
+        "WCLB.Model.Instance"
       ],
       "notes": "GapBound is proved equivalent to the bounded-below infimum formulation."
     },
@@ -52,13 +52,13 @@
       "modules": [
         "WC/Moreau.lean",
         "WC/Basic.lean",
-        "MP/Model.lean"
+        "WCLB/Model.lean"
       ],
       "declarations": [
         "WC.moreauEnvelope",
         "WC.moreau_hasGradientAt",
         "WC.moreau_gradient_eq",
-        "MP.Model.successProbability"
+        "WCLB.Model.successProbability"
       ],
       "notes": "Uses the actual infimum Moreau envelope and mathlib gradient, with actual proximal minimizers."
     },
@@ -91,11 +91,11 @@
       "modules": [
         "WC/Model.lean",
         "WC/ModelSeedExtension.lean",
-        "MP/Model.lean"
+        "WCLB/Model.lean"
       ],
       "declarations": [
-        "MP.Model.BorelAlgorithm",
-        "MP.Model.trajectory",
+        "WCLB.Model.BorelAlgorithm",
+        "WCLB.Model.trajectory",
         "WC.Model.UnitBorelAlgorithm.extend_trajectory"
       ],
       "notes": "Total-real Borel seed rules are equivalent to the paper unit-interval rules by a proved continuous clamp extension."
@@ -111,14 +111,14 @@
       "modules": [
         "WC/Model.lean",
         "WC/Complexity.lean",
-        "MP/Model.lean",
-        "MP/ModelClass.lean"
+        "WCLB/Model.lean",
+        "WCLB/ModelClass.lean"
       ],
       "declarations": [
-        "MP.Model.hittingTime",
-        "MP.Model.oracleComplexity",
-        "MP.Model.oracleComplexityOn",
-        "MP.Model.oracleComplexityOn_univ"
+        "WCLB.Model.hittingTime",
+        "WCLB.Model.oracleComplexity",
+        "WCLB.Model.oracleComplexityOn",
+        "WCLB.Model.oracleComplexityOn_univ"
       ],
       "notes": "Infimum over algorithms, supremum over instances, then earliest successful integer time; empty success set gives infinity. Arbitrary subclasses are explicit."
     },
@@ -131,20 +131,20 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Model.lean",
-        "MP/Main.lean",
-        "MP/UniformFamily.lean",
-        "MP/Family.lean",
+        "WCLB/Model.lean",
+        "WCLB/Main.lean",
+        "WCLB/UniformFamily.lean",
+        "WCLB/Family.lean",
         "WC/LowerReduction.lean"
       ],
       "declarations": [
-        "MP.Model.MainTheorem",
-        "MP.small_accuracy_ratios",
-        "MP.uniformFamilies",
-        "MP.main_explicit",
-        "MP.main"
+        "WCLB.Model.MainTheorem",
+        "WCLB.small_accuracy_ratios",
+        "WCLB.uniformFamilies",
+        "WCLB.main_explicit",
+        "WCLB.main"
       ],
-      "notes": "Proved with universal constants c0=1/512 and c=2^-29, independent of confidence. The final proof uses the actual MP fixed-radius family; the shared WC analytic/scaling proof is reused. The logarithmic-dimension statement is also proved separately."
+      "notes": "Proved with universal constants c0=1/512 and c=2^-29, independent of confidence. The final proof uses the actual WCLB fixed-radius family; the shared WC analytic/scaling proof is reused. The logarithmic-dimension statement is also proved separately."
     },
     {
       "environment": "condition",
@@ -155,12 +155,12 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Conditions.lean",
-        "MP/Verification.lean"
+        "WCLB/Conditions.lean",
+        "WCLB/Verification.lean"
       ],
       "declarations": [
-        "MP.UnscaledHardInstanceConditions",
-        "MP.construction_satisfies_conditions"
+        "WCLB.UnscaledHardInstanceConditions",
+        "WCLB.construction_satisfies_conditions"
       ],
       "notes": "All C1-C4 fields are filled with actual proofs. Natural index r represents paper time t=r-1, including t=-1."
     },
@@ -319,13 +319,13 @@
         "WC/ChainMajorant.lean",
         "WC/ChainSources.lean",
         "WC/MajorantMaximumRule.lean",
-        "MP/Construction.lean"
+        "WCLB/Construction.lean"
       ],
       "declarations": [
         "WC.chainMajorant_sources_nonempty",
         "WC.chainMajorant_sources_isCompact",
         "WC.chainMajorant_subdifferential",
-        "MP.source_radius_bound"
+        "WCLB.source_radius_bound"
       ],
       "notes": "Actual maximizing points are nonempty and compact; the full subdifferential is their actual source-slope convex hull. The explicit radius bound is stronger than local boundedness."
     },
@@ -338,12 +338,12 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Locality.lean",
+        "WCLB/Locality.lean",
         "WC/ChainSources.lean"
       ],
       "declarations": [
-        "MP.source_order",
-        "MP.remote_source_subdifferential"
+        "WCLB.source_order",
+        "WCLB.remote_source_subdifferential"
       ],
       "notes": "Every maximizing source lies below the query coordinatewise; every remote source has the exact singleton subdifferential."
     },
@@ -357,12 +357,12 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Locality.lean",
+        "WCLB/Locality.lean",
         "WC/MaskedLocality.lean",
         "WC/MaskedSubdifferential.lean"
       ],
       "declarations": [
-        "MP.robust_oracle_identity",
+        "WCLB.robust_oracle_identity",
         "WC.chainMajorant_diagonalMask_eq",
         "WC.chainMajorant_diagonalMask_subdifferential_eq"
       ],
@@ -377,18 +377,18 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Construction.lean",
-        "MP/Verification.lean",
+        "WCLB/Construction.lean",
+        "WCLB/Verification.lean",
         "WC/LiftedChainBarrier.lean",
-        "MP/TerminalSubspace.lean"
+        "WCLB/TerminalSubspace.lean"
       ],
       "declarations": [
-        "MP.unscaled_terminal_barrier",
-        "MP.terminal_diagonal_barrier",
+        "WCLB.unscaled_terminal_barrier",
+        "WCLB.terminal_diagonal_barrier",
         "WC.horizon_bound",
-        "MP.zero_outside_of_mem_coordinateSpan",
-        "MP.terminal_subspace_barrier",
-        "MP.terminal_stationarity"
+        "WCLB.zero_outside_of_mem_coordinateSpan",
+        "WCLB.terminal_subspace_barrier",
+        "WCLB.terminal_stationarity"
       ],
       "notes": "The explicit terminal-stationarity conjunction proves the horizon bound, the literal subspace case and the robust hidden-coordinate case. The reverse coordinateSpan-to-zero-outside bridge is proved, not left as an informal inference."
     },
@@ -401,11 +401,11 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Construction.lean",
+        "WCLB/Construction.lean",
         "WC/InitialGap.lean"
       ],
       "declarations": [
-        "MP.initial_gap_le_five",
+        "WCLB.initial_gap_le_five",
         "WC.chainMajorant_zero",
         "WC.chainMajorant_gap",
         "WC.chainMajorant_infimum"
@@ -421,17 +421,17 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Radial.lean",
-        "MP/RadialOracle.lean"
+        "WCLB/Radial.lean",
+        "WCLB/RadialOracle.lean"
       ],
       "declarations": [
-        "MP.radialRadius",
-        "MP.radialObjective",
-        "MP.radial_admissible",
-        "MP.radial_moreau_barrier",
-        "MP.radial_exterior_gradient",
-        "MP.radial_exterior_oracle",
-        "MP.radialObjectiveAt_exterior_fullOracle_eq"
+        "WCLB.radialRadius",
+        "WCLB.radialObjective",
+        "WCLB.radial_admissible",
+        "WCLB.radial_moreau_barrier",
+        "WCLB.radial_exterior_gradient",
+        "WCLB.radial_exterior_oracle",
+        "WCLB.radialObjectiveAt_exterior_fullOracle_eq"
       ],
       "notes": "Uses exactly R=2^18(M+sqrt(MN)) and the paper normalized max formula. The actual own-envelope barrier and complete exterior oracle are proved; this is not an undocumented reuse of the older enlarged radius."
     },
@@ -445,34 +445,34 @@
       ],
       "status": "proved",
       "modules": [
-        "MP/Concentration.lean",
-        "MP/AdaptiveConcentration.lean",
-        "MP/Budget.lean",
-        "MP/Family.lean",
-        "MP/JointMeasurability.lean",
-        "MP/RandomizedReduction.lean"
+        "WCLB/Concentration.lean",
+        "WCLB/AdaptiveConcentration.lean",
+        "WCLB/Budget.lean",
+        "WCLB/Family.lean",
+        "WCLB/JointMeasurability.lean",
+        "WCLB/RandomizedReduction.lean"
       ],
       "declarations": [
-        "MP.Concentration.sphere_mgf_le",
-        "MP.Concentration.sphere_projection_tail",
-        "MP.Concentration.adaptive_projection_tail_product",
-        "MP.logarithmicDimensionBound",
-        "MP.logarithmic_dimension_budget_ennreal",
-        "MP.family_barrierEvent_measurable",
-        "MP.joint_barrier_of_exponential_budget",
-        "MP.randomized_reduction"
+        "WCLB.Concentration.sphere_mgf_le",
+        "WCLB.Concentration.sphere_projection_tail",
+        "WCLB.Concentration.adaptive_projection_tail_product",
+        "WCLB.logarithmicDimensionBound",
+        "WCLB.logarithmic_dimension_budget_ennreal",
+        "WCLB.family_barrierEvent_measurable",
+        "WCLB.joint_barrier_of_exponential_budget",
+        "WCLB.randomized_reduction"
       ],
       "notes": "The exact logarithmic threshold is proved with a closed-event exponential spherical cap bound, genuine stabilizer averaging, all-query and arbitrary-output oracle coupling, and the actual Haar-frame/private-seed product probability. No conditional law or tail estimate is assumed."
     }
   ],
   "representation_notes": [
-    "The MP construction is exactly the existing coupled function and least 2-Lipschitz majorant, with zero-based coordinates.",
-    "The final main proof uses MP.uniformFamilies and the actual prescribed MP radius R=2^18(M+sqrt(MN)). The shared WC scaling and analytic library are reused.",
-    "The exact logarithmic dimension bound is independently proved by MP.randomized_reduction on the actual Haar-frame/private-seed product measure. No polynomial dimension bound is substituted."
+    "The WCLB construction is exactly the existing coupled function and least 2-Lipschitz majorant, with zero-based coordinates.",
+    "The final main proof uses WCLB.uniformFamilies and the actual prescribed WCLB radius R=2^18(M+sqrt(MN)). The shared WC scaling and analytic library are reused.",
+    "The exact logarithmic dimension bound is independently proved by WCLB.randomized_reduction on the actual Haar-frame/private-seed product measure. No polynomial dimension bound is substituted."
   ],
   "verification_status": "passed: unified lake build, exact target type, all coverage declarations, and transitive axiom audits",
   "coverage_check": {
-    "command": "lake env lean -DautoImplicit=false scripts/check_mp_coverage.lean",
+    "command": "lake env lean -DautoImplicit=false scripts/check_wclb_coverage.lean",
     "status": "passed",
     "declarations": 91,
     "axiom_reports": 16,
@@ -482,5 +482,5 @@
       "Quot.sound"
     ]
   },
-  "verification_receipt": "verification_mp.json"
+  "verification_receipt": "verification_wclb.json"
 }

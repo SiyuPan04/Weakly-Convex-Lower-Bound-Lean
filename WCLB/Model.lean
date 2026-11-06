@@ -1,12 +1,12 @@
 import WC.Model
 
-/-! The model and exact small-accuracy theorem of the MP submission.
+/-! The model and exact small-accuracy theorem of the WCLB manuscript.
 The complete Hausdorff-Borel oracle and actual Moreau gradient are those
 already proved in `WC`; no new oracle or stationarity surrogate is used. -/
 
 noncomputable section
 open scoped ENNReal
-namespace MP
+namespace WCLB
 namespace Model
 
 abbrev Space := WC.Model.Space
@@ -19,7 +19,7 @@ abbrev successProbability := @WC.Model.successProbability
 abbrev hittingTime := @WC.Model.hittingTime
 abbrev oracleComplexity := WC.Model.oracleComplexity
 
-/-- The submission's definition for arbitrary subclasses. Empty classes
+/-- The manuscript's definition for arbitrary subclasses. Empty classes
 are also defined; the manuscript uses this only for nonempty classes. -/
 def oracleComplexityOn (G ρ Δ ε ν : ℝ) (hG : 0 ≤ G) (hρ : 0 ≤ ρ)
     (algorithms : Set BorelAlgorithm) (instances : Set (Instance G ρ Δ)) : ℝ≥0∞ :=
@@ -38,4 +38,4 @@ def MainTheorem : Prop :=
         oracleComplexity G ρ Δ ε ν hG.le hρ.le
 
 end Model
-end MP
+end WCLB

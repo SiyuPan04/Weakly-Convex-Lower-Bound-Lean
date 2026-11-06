@@ -1,6 +1,6 @@
-import MP.Family
-import MP.AdaptiveConcentration
-import MP.Budget
+import WCLB.Family
+import WCLB.AdaptiveConcentration
+import WCLB.Budget
 
 /-! The exact logarithmic-dimension randomized reduction. Its event uses
 the final objective's genuine Moreau gradient at actual queries and any
@@ -9,7 +9,7 @@ unqueried Borel output, under actual Haar × private-seed sampling. -/
 noncomputable section
 open MeasureTheory
 open scoped BigOperators ENNReal
-namespace MP
+namespace WCLB
 open WC
 open WC.Rotation.Normalized
 set_option maxHeartbeats 800000
@@ -158,4 +158,4 @@ theorem randomized_reduction {M N d : ℕ} [NeZero d]
     exact hbudget)
   simpa only [ENNReal.ofReal_sub 1 hδ.le, ENNReal.ofReal_one] using hh
 
-end MP
+end WCLB

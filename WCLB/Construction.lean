@@ -6,11 +6,11 @@ import WC.RobustLocality
 import WC.MaskedSubdifferential
 import WC.CoreFiltration
 
-/-! Literal constants and the unscaled terminal certificate of the MP
-submission. The construction itself is the same coupled majorant as WC. -/
+/-! Literal constants and the unscaled terminal certificate of the WCLB
+manuscript. The construction itself is the same coupled majorant as WC. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC
 
 theorem initial_gap_le_five {M N : ℕ} (hM : 2 ≤ M) (hN : 256 ≤ N) :
@@ -113,4 +113,4 @@ theorem terminal_diagonal_barrier {M N : ℕ} (hM : 2 ≤ M) (hN : 256 ≤ N)
     simpa only [exposedIndices, Finset.mem_filter, Finset.mem_univ, true_and, not_lt] using hn
   exact (le_abs_self _).trans (hidden i hlevel).le
 
-end MP
+end WCLB

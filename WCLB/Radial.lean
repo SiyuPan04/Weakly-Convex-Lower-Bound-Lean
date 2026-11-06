@@ -1,14 +1,14 @@
-import MP.Construction
+import WCLB.Construction
 import WC.GeneralRadialBarrier
 import WC.GeneralMoreauScaling
 import WC.LowerReduction
 import WC.PrefixOracleLocality
 
-/-! The MP submission's prescribed radius and exact normalized radial
+/-! The WCLB manuscript's prescribed radius and exact normalized radial
 objective, including its own Moreau gradient and complete oracle. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC Filter Topology
 
 def radialRadius (M N : ℕ) : ℝ := (2 : ℝ) ^ 18 * ((M : ℝ) + Real.sqrt ((M * N : ℕ) : ℝ))
@@ -160,4 +160,4 @@ theorem radial_moreau_barrier {M N : ℕ} (hM : 2 ≤ M) (hN : 256 ≤ N)
   have hdiv := div_le_div_of_nonneg_right hb (by norm_num : (0 : ℝ) ≤ 9)
   convert hdiv using 1 <;> first | rfl | (push_cast; ring)
 
-end MP
+end WCLB

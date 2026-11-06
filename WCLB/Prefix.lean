@@ -1,11 +1,11 @@
-import MP.Radial
+import WCLB.Radial
 import WC.PrefixChainResponse
 
-/-! The exact MP radial objective on every orthonormal prefix, with
+/-! The exact WCLB radial objective on every orthonormal prefix, with
 uniform regularity and a genuine Borel full-oracle response everywhere. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC
 set_option maxHeartbeats 600000
 
@@ -84,4 +84,4 @@ theorem prefixResponse_measurable {M N : ℕ} (hM : 0 < M) (hN : 256 ≤ N)
     apply TopologicalSpace.NonemptyCompacts.ext
     rfl
 
-end MP
+end WCLB

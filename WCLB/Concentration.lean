@@ -11,7 +11,7 @@ noncomputable section
 open MeasureTheory
 open scoped BigOperators ENNReal
 
-namespace MP.Concentration
+namespace WCLB.Concentration
 
 def sign (b : Bool) : ℝ := if b then 1 else -1
 
@@ -217,7 +217,7 @@ theorem sphere_projection_tail_one_real (μ : Measure E) [IsProbabilityMeasure �
 
 /-- A genuine spherical cap bound at the closed threshold `a ≤ |inner|`.
 The closed bad event yields the strict small-coordinate event required by
-the MP manuscript without any halving of the tolerance. -/
+the WCLB manuscript without any halving of the tolerance. -/
 theorem sphere_projection_tail_real (μ : Measure E) [IsProbabilityMeasure μ]
     (invariant : WC.Sphere.RotationallyInvariant μ) (unit_norm : ∀ᵐ u ∂μ, ‖u‖ = 1)
     {d : ℕ} (hd : 0 < d) (b : OrthonormalBasis (Fin d) ℝ E) (x : E)
@@ -253,4 +253,4 @@ theorem sphere_projection_tail (μ : Measure E) [IsProbabilityMeasure μ]
 
 end InvariantMeasure
 
-end MP.Concentration
+end WCLB.Concentration

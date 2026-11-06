@@ -1,12 +1,12 @@
-import MP.Model
-import MP.UniformFamily
+import WCLB.Model
+import WCLB.UniformFamily
 
-/-! `thm:main` of the MP submission with the explicit constants used
+/-! `thm:main` of the WCLB manuscript with the explicit constants used
 in its scaling proof. The imported normalized families are constructed
 and proved, rather than assumed as a certificate. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 
 theorem small_accuracy_ratios {G ρ Δ ε : ℝ} (hG : 0 < G) (hρ : 0 < ρ)
     (hΔ : 0 < Δ) (hε : 0 < ε)
@@ -30,7 +30,7 @@ theorem small_accuracy_ratios {G ρ Δ ε : ℝ} (hG : 0 < G) (hρ : 0 < ρ)
     norm_num
     nlinarith
 
-/-- The explicit lower bound proved in the submission: `c₀=1/512`
+/-- The explicit lower bound proved in the manuscript: `c₀=1/512`
 and `c=2⁻²⁹`, uniformly over every confidence `ν∈[0,1)`. -/
 theorem main_explicit {G ρ Δ ε ν : ℝ} (hG : 0 < G) (hρ : 0 < ρ)
     (hΔ : 0 < Δ) (hε : 0 < ε)
@@ -43,7 +43,7 @@ theorem main_explicit {G ρ Δ ε ν : ℝ} (hG : 0 < G) (hρ : 0 < ρ)
   have hgap' : Δ ≤ (G ^ 2 / ρ) * Real.exp ((G ^ 2 / ε ^ 2) / 200) := by
     have heq : (G ^ 2 / ε ^ 2) / 200 = G ^ 2 / (200 * ε ^ 2) := by ring
     rwa [heq]
-  exact WC.LowerReduction.scaling_reduction MP.uniformFamilies
+  exact WC.LowerReduction.scaling_reduction WCLB.uniformFamilies
     hG hρ hΔ hε hν hν_one hb hs hgap'
 
 theorem main : Model.MainTheorem := by
@@ -51,4 +51,4 @@ theorem main : Model.MainTheorem := by
   intro G ρ Δ ε ν hG hρ hΔ hε haccuracy hgap hν hν_one
   exact main_explicit hG hρ hΔ hε haccuracy hgap hν hν_one
 
-end MP
+end WCLB

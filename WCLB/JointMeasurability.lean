@@ -1,10 +1,10 @@
-import MP.Family
+import WCLB.Family
 
 /-! Joint Borel measurability of the genuine algorithm execution and
 barrier event on the orthogonal-frame/private-seed probability space. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC MeasureTheory
 open WC.Rotation.Normalized
 
@@ -84,4 +84,4 @@ theorem family_barrierEvent_measurable (H : Family d M N T) (A : WC.Model.BorelA
   simp only [Set.setOf_forall]
   exact MeasurableSet.iInter fun t => MeasurableSet.iInter fun _ => hquery t
 
-end MP
+end WCLB

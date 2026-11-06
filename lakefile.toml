@@ -1,6 +1,6 @@
 name = "WC"
 version = "0.1.0"
-defaultTargets = ["WC", "MP"]
+defaultTargets = ["WC", "WCLB"]
 
 [leanOptions]
 autoImplicit = false
@@ -14,4 +14,4 @@ rev = "11d11a11a667a8fa8ea19d9456fe059f683e308f"
 name = "WC"
 
 [[lean_lib]]
-name = "MP"
+name = "WCLB"

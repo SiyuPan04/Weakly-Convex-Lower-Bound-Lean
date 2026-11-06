@@ -1,9 +1,9 @@
-import MP.Conditions
-import MP.Construction
+import WCLB.Conditions
+import WCLB.Construction
 
 /-! Concrete verification of all four unscaled conditions. -/
 
-namespace MP
+namespace WCLB
 
 theorem construction_satisfies_conditions {M N : ℕ} (hM : 2 ≤ M) (hN : 256 ≤ N)
     (hMmax : M ≤ 2 ^ (8 * N)) :
@@ -17,4 +17,4 @@ theorem construction_satisfies_conditions {M N : ℕ} (hM : 2 ≤ M) (hN : 256 �
   simp only [WC.exposedIndices, Finset.mem_filter, Finset.mem_univ, true_and]
   omega
 
-end MP
+end WCLB

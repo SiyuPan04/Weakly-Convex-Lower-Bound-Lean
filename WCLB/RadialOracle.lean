@@ -1,9 +1,9 @@
-import MP.Radial
+import WCLB.Radial
 
-/-! Exact exterior and robust masked identities for the full MP oracle. -/
+/-! Exact exterior and robust masked identities for the full WCLB oracle. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC Filter Topology
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -97,4 +97,4 @@ theorem radialObjectiveAt_exterior_fullOracle_eq {M N : ℕ} (hM : 2 ≤ M) (hN 
   exact (radialObjectiveAt_eventuallyEq_outside (by omega) R U x hx).trans
     (radialObjectiveAt_eventuallyEq_outside (by omega) R V x hx).symm
 
-end MP
+end WCLB

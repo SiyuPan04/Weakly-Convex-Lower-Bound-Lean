@@ -3,10 +3,10 @@ import WC.MaskedSubdifferential
 import WC.DiagonalSubspaces
 
 /-! Literal source order and the complete robust zero-chain identity for
-the MP submission. The natural index r denotes the paper's time r-1. -/
+the WCLB manuscript. The natural index r denotes the paper's time r-1. -/
 
 noncomputable section
-namespace MP
+namespace WCLB
 open WC
 open scoped BigOperators Classical
 
@@ -59,4 +59,4 @@ theorem robust_oracle_identity {M N : ℕ} (hM : 1 ≤ M) (hN : 256 ≤ N)
   exact chainMajorant_subgradient_diagonal_zero hM hN z r
     (fun i hi => (hidden i hi).le) hv i hlevel
 
-end MP
+end WCLB

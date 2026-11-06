@@ -2,9 +2,9 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.ENNReal.Real
 import Mathlib.Tactic
 
-/-! Exact logarithmic dimension and probability budget in the MP reduction. -/
+/-! Exact logarithmic dimension and probability budget in the WCLB reduction. -/
 
-namespace MP
+namespace WCLB
 open scoped ENNReal
 
 def logarithmicDimensionBound (K T d : ℕ) (R η δ : ℝ) : Prop :=
@@ -65,4 +65,4 @@ theorem logarithmic_dimension_budget_ennreal {K T d : ℕ} {R η δ : ℝ}
   rw [hc, ← ENNReal.ofReal_mul (by positivity : (0 : ℝ) ≤ (K : ℝ) * (T + 1))]
   exact ENNReal.ofReal_le_ofReal (logarithmic_dimension_budget hK hR hη hδ hd)
 
-end MP
+end WCLB
