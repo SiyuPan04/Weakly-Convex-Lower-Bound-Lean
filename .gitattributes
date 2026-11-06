@@ -1,7 +1,9 @@
 * text=auto
-*.lean text eol=lf
+# Preserve the verified source and manuscript snapshot bytes.
+*.lean -text
+*.tex -text
 *.toml text eol=lf
-*.json text eol=lf
+*.json -text
 *.md text eol=lf
 *.yml text eol=lf
 *.ps1 text eol=crlf

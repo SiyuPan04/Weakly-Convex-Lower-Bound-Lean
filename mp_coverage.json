@@ -1,0 +1,486 @@
+{
+  "source": "mp_snapshot/main.tex",
+  "sha256": "29efd2ce9866a9b719b4b5d9865d3b216cacfe23823ce43fdd9114e11f670f13",
+  "goal": "Complete formalization of the MP submission, including its literal logarithmic dimension reduction.",
+  "main_theorem": "MP.main : MP.Model.MainTheorem",
+  "status": "proofs_complete",
+  "items": [
+    {
+      "environment": "theorem",
+      "title": "Informal",
+      "line": 557,
+      "labels": [],
+      "status": "proved",
+      "modules": [
+        "MP/Main.lean"
+      ],
+      "declarations": [
+        "MP.main",
+        "MP.main_explicit"
+      ],
+      "notes": "The exact main theorem implies the informal asymptotic statement, using the actual prescribed-radius MP hard family."
+    },
+    {
+      "environment": "definition",
+      "title": "Function class",
+      "line": 649,
+      "labels": [],
+      "status": "formalized",
+      "modules": [
+        "WC/Basic.lean",
+        "WC/Model.lean",
+        "MP/Model.lean"
+      ],
+      "declarations": [
+        "WC.WeaklyConvex",
+        "WC.GloballyLipschitz",
+        "WC.GapBound",
+        "WC.Admissible",
+        "WC.gapBound_iff_inf",
+        "MP.Model.Instance"
+      ],
+      "notes": "GapBound is proved equivalent to the bounded-below infimum formulation."
+    },
+    {
+      "environment": "definition",
+      "title": "$\\epsilon$-stationary point",
+      "line": 664,
+      "labels": [
+        "def:stationary"
+      ],
+      "status": "formalized",
+      "modules": [
+        "WC/Moreau.lean",
+        "WC/Basic.lean",
+        "MP/Model.lean"
+      ],
+      "declarations": [
+        "WC.moreauEnvelope",
+        "WC.moreau_hasGradientAt",
+        "WC.moreau_gradient_eq",
+        "MP.Model.successProbability"
+      ],
+      "notes": "Uses the actual infimum Moreau envelope and mathlib gradient, with actual proximal minimizers."
+    },
+    {
+      "environment": "definition",
+      "title": "{First-order oracle}",
+      "line": 689,
+      "labels": [],
+      "status": "formalized",
+      "modules": [
+        "WC/Oracle.lean",
+        "WC/ParametricOracle.lean"
+      ],
+      "declarations": [
+        "WC.subdifferential",
+        "WC.fullOracle",
+        "WC.fullOracle_measurable",
+        "WC.parameterized_fullOracle_measurable"
+      ],
+      "notes": "The entire Frechet subdifferential is compact, convex, nonempty and Hausdorff-Borel. No chosen-subgradient replacement is used."
+    },
+    {
+      "environment": "definition",
+      "title": "Randomized first-order algorithm",
+      "line": 697,
+      "labels": [
+        "def:randomized-algorithm"
+      ],
+      "status": "formalized",
+      "modules": [
+        "WC/Model.lean",
+        "WC/ModelSeedExtension.lean",
+        "MP/Model.lean"
+      ],
+      "declarations": [
+        "MP.Model.BorelAlgorithm",
+        "MP.Model.trajectory",
+        "WC.Model.UnitBorelAlgorithm.extend_trajectory"
+      ],
+      "notes": "Total-real Borel seed rules are equivalent to the paper unit-interval rules by a proved continuous clamp extension."
+    },
+    {
+      "environment": "definition",
+      "title": "Oracle complexity",
+      "line": 736,
+      "labels": [
+        "def:complexity-algorithm-class"
+      ],
+      "status": "formalized",
+      "modules": [
+        "WC/Model.lean",
+        "WC/Complexity.lean",
+        "MP/Model.lean",
+        "MP/ModelClass.lean"
+      ],
+      "declarations": [
+        "MP.Model.hittingTime",
+        "MP.Model.oracleComplexity",
+        "MP.Model.oracleComplexityOn",
+        "MP.Model.oracleComplexityOn_univ"
+      ],
+      "notes": "Infimum over algorithms, supremum over instances, then earliest successful integer time; empty success set gives infinity. Arbitrary subclasses are explicit."
+    },
+    {
+      "environment": "theorem",
+      "title": "Main randomized lower bound",
+      "line": 772,
+      "labels": [
+        "thm:main"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Model.lean",
+        "MP/Main.lean",
+        "MP/UniformFamily.lean",
+        "MP/Family.lean",
+        "WC/LowerReduction.lean"
+      ],
+      "declarations": [
+        "MP.Model.MainTheorem",
+        "MP.small_accuracy_ratios",
+        "MP.uniformFamilies",
+        "MP.main_explicit",
+        "MP.main"
+      ],
+      "notes": "Proved with universal constants c0=1/512 and c=2^-29, independent of confidence. The final proof uses the actual MP fixed-radius family; the shared WC analytic/scaling proof is reused. The logarithmic-dimension statement is also proved separately."
+    },
+    {
+      "environment": "condition",
+      "title": "Unscaled hard instance properties",
+      "line": 870,
+      "labels": [
+        "cond:hard-instance"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Conditions.lean",
+        "MP/Verification.lean"
+      ],
+      "declarations": [
+        "MP.UnscaledHardInstanceConditions",
+        "MP.construction_satisfies_conditions"
+      ],
+      "notes": "All C1-C4 fields are filled with actual proofs. Natural index r represents paper time t=r-1, including t=-1."
+    },
+    {
+      "environment": "lemma",
+      "title": "Tilted-block locality",
+      "line": 1003,
+      "labels": [
+        "lem:tilted-block-locality"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/BlockSubgradient.lean"
+      ],
+      "declarations": [
+        "WC.euclideanTiltedBlock_frechetSubgradient_locality"
+      ],
+      "notes": "Exact support of every actual Frechet subgradient in the first n+1 coordinates."
+    },
+    {
+      "environment": "lemma",
+      "title": "Variational representation",
+      "line": 1153,
+      "labels": [
+        "lem:max-representation",
+        "eq:Fw"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/Variational.lean",
+        "WC/CoupledRegularity.lean"
+      ],
+      "declarations": [
+        "WC.positiveScore_variational",
+        "WC.coupledFunction_variational",
+        "WC.weightedCoupledFunction_relay_expansion",
+        "WC.weightedCoupledFunction_grouped"
+      ],
+      "notes": "The inner maximum is attained over the actual nonnegative Euclidean unit ball, with the exact relay representation."
+    },
+    {
+      "environment": "lemma",
+      "title": "Progress regularity",
+      "line": 1208,
+      "labels": [
+        "lem:progress-regularity"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/Block.lean",
+        "WC/Progress.lean",
+        "WC/RelaySmooth.lean"
+      ],
+      "declarations": [
+        "WC.hasGradientAt_euclideanProgress",
+        "WC.progressGradient_norm_le",
+        "WC.progressGradient_norm_sub_le",
+        "WC.monotone_blockProgress"
+      ],
+      "notes": "Actual clipped-cubic derivatives, endpoint derivatives, gradient bounds and monotonicity are proved."
+    },
+    {
+      "environment": "lemma",
+      "title": "Weak convexity of the coupled function",
+      "line": 1264,
+      "labels": [
+        "lem:coupled-curvature"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/CoupledCurvature.lean",
+        "WC/RelaySmooth.lean"
+      ],
+      "declarations": [
+        "WC.weaklyConvex_smoothBlockTerm",
+        "WC.weaklyConvex_weightedCoupledFunction",
+        "WC.weaklyConvex_coupledFunction"
+      ],
+      "notes": "Actual modulus 9/2 of the coupled function, derived from the exact variational maximum."
+    },
+    {
+      "environment": "proposition",
+      "title": "Majorant regularity",
+      "line": 1313,
+      "labels": [
+        "prop:regularity"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/ChainMajorant.lean",
+        "WC/RawLipschitz.lean",
+        "WC/CoupledRegularity.lean"
+      ],
+      "declarations": [
+        "WC.chainMajorant_finite",
+        "WC.chainMajorant_lipschitz",
+        "WC.chainMajorant_weaklyConvex",
+        "WC.chainMajorant_lower_bound",
+        "WC.coupledFunction_coordinate_antitone"
+      ],
+      "notes": "Finiteness, boundedness below, 2-Lipschitz regularity, weak convexity and coordinate antitonicity are proved."
+    },
+    {
+      "environment": "lemma",
+      "title": "Width of the diagonal filtration",
+      "line": 1409,
+      "labels": [
+        "lem:diagonal-width"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/DiagonalSubspaces.lean",
+        "WC/Numerics.lean"
+      ],
+      "declarations": [
+        "WC.diagonal_filtration_width",
+        "WC.diagonal_quotient_finrank",
+        "WC.diagonal_initial_space"
+      ],
+      "notes": "Literal direct sum, quotient dimension equality and width at most five, including the initial layer."
+    },
+    {
+      "environment": "lemma",
+      "title": "Complete raw subdifferential",
+      "line": 1448,
+      "labels": [
+        "lem:full-subdiff",
+        "eq:full-subdiff",
+        "eq:block-subgradient"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/RegroupedSubdifferential.lean"
+      ],
+      "declarations": [
+        "WC.subdifferential_coupledFunction_blockwise",
+        "WC.mem_coupledBlockSubgradients_iff",
+        "WC.coupledBlockSubgradients_nonempty",
+        "WC.coupledBlockSubgradients_convex",
+        "WC.coupledBlockSubgradients_isCompact",
+        "WC.coupledProgressCoefficient_mem_Icc",
+        "WC.active_coupled_weight_score_nonneg"
+      ],
+      "notes": "The literal union over active weights and blockwise formula, including compactness, convexity and coefficient bounds."
+    },
+    {
+      "environment": "lemma",
+      "title": "Sources and complete majorant subdifferential",
+      "line": 1527,
+      "labels": [
+        "newrand:sources",
+        "newrand:source-formula"
+      ],
+      "status": "proved",
+      "modules": [
+        "WC/ChainMajorant.lean",
+        "WC/ChainSources.lean",
+        "WC/MajorantMaximumRule.lean",
+        "MP/Construction.lean"
+      ],
+      "declarations": [
+        "WC.chainMajorant_sources_nonempty",
+        "WC.chainMajorant_sources_isCompact",
+        "WC.chainMajorant_subdifferential",
+        "MP.source_radius_bound"
+      ],
+      "notes": "Actual maximizing points are nonempty and compact; the full subdifferential is their actual source-slope convex hull. The explicit radius bound is stronger than local boundedness."
+    },
+    {
+      "environment": "lemma",
+      "title": "Source order and remote singleton",
+      "line": 1572,
+      "labels": [
+        "lem:source-order"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Locality.lean",
+        "WC/ChainSources.lean"
+      ],
+      "declarations": [
+        "MP.source_order",
+        "MP.remote_source_subdifferential"
+      ],
+      "notes": "Every maximizing source lies below the query coordinatewise; every remote source has the exact singleton subdifferential."
+    },
+    {
+      "environment": "proposition",
+      "title": "Robust complete-oracle identity",
+      "line": 1642,
+      "labels": [
+        "newrand:robust",
+        "newrand:robust-identity"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Locality.lean",
+        "WC/MaskedLocality.lean",
+        "WC/MaskedSubdifferential.lean"
+      ],
+      "declarations": [
+        "MP.robust_oracle_identity",
+        "WC.chainMajorant_diagonalMask_eq",
+        "WC.chainMajorant_diagonalMask_subdifferential_eq"
+      ],
+      "notes": "Exact function value, full subdifferential basepoint identity and support containment, for every actual source and every full subgradient."
+    },
+    {
+      "environment": "proposition",
+      "title": "Terminal-layer stationarity",
+      "line": 2040,
+      "labels": [
+        "prop:terminal-stationarity"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Construction.lean",
+        "MP/Verification.lean",
+        "WC/LiftedChainBarrier.lean",
+        "MP/TerminalSubspace.lean"
+      ],
+      "declarations": [
+        "MP.unscaled_terminal_barrier",
+        "MP.terminal_diagonal_barrier",
+        "WC.horizon_bound",
+        "MP.zero_outside_of_mem_coordinateSpan",
+        "MP.terminal_subspace_barrier",
+        "MP.terminal_stationarity"
+      ],
+      "notes": "The explicit terminal-stationarity conjunction proves the horizon bound, the literal subspace case and the robust hidden-coordinate case. The reverse coordinateSpan-to-zero-outside bridge is proved, not left as an informal inference."
+    },
+    {
+      "environment": "proposition",
+      "title": "Initial gap",
+      "line": 2535,
+      "labels": [
+        "newrand:gap"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Construction.lean",
+        "WC/InitialGap.lean"
+      ],
+      "declarations": [
+        "MP.initial_gap_le_five",
+        "WC.chainMajorant_zero",
+        "WC.chainMajorant_gap",
+        "WC.chainMajorant_infimum"
+      ],
+      "notes": "The new literal 5M/N bound follows from the already proved exact minimum and exact initial-gap identity."
+    },
+    {
+      "environment": "lemma",
+      "title": "Properties of the radial modification",
+      "line": 2667,
+      "labels": [
+        "lem:radial-stationarity"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Radial.lean",
+        "MP/RadialOracle.lean"
+      ],
+      "declarations": [
+        "MP.radialRadius",
+        "MP.radialObjective",
+        "MP.radial_admissible",
+        "MP.radial_moreau_barrier",
+        "MP.radial_exterior_gradient",
+        "MP.radial_exterior_oracle",
+        "MP.radialObjectiveAt_exterior_fullOracle_eq"
+      ],
+      "notes": "Uses exactly R=2^18(M+sqrt(MN)) and the paper normalized max formula. The actual own-envelope barrier and complete exterior oracle are proved; this is not an undocumented reuse of the older enlarged radius."
+    },
+    {
+      "environment": "lemma",
+      "title": "Randomized reduction",
+      "line": 2901,
+      "labels": [
+        "lem:randomized-reduction",
+        "eq:rotation-dimension"
+      ],
+      "status": "proved",
+      "modules": [
+        "MP/Concentration.lean",
+        "MP/AdaptiveConcentration.lean",
+        "MP/Budget.lean",
+        "MP/Family.lean",
+        "MP/JointMeasurability.lean",
+        "MP/RandomizedReduction.lean"
+      ],
+      "declarations": [
+        "MP.Concentration.sphere_mgf_le",
+        "MP.Concentration.sphere_projection_tail",
+        "MP.Concentration.adaptive_projection_tail_product",
+        "MP.logarithmicDimensionBound",
+        "MP.logarithmic_dimension_budget_ennreal",
+        "MP.family_barrierEvent_measurable",
+        "MP.joint_barrier_of_exponential_budget",
+        "MP.randomized_reduction"
+      ],
+      "notes": "The exact logarithmic threshold is proved with a closed-event exponential spherical cap bound, genuine stabilizer averaging, all-query and arbitrary-output oracle coupling, and the actual Haar-frame/private-seed product probability. No conditional law or tail estimate is assumed."
+    }
+  ],
+  "representation_notes": [
+    "The MP construction is exactly the existing coupled function and least 2-Lipschitz majorant, with zero-based coordinates.",
+    "The final main proof uses MP.uniformFamilies and the actual prescribed MP radius R=2^18(M+sqrt(MN)). The shared WC scaling and analytic library are reused.",
+    "The exact logarithmic dimension bound is independently proved by MP.randomized_reduction on the actual Haar-frame/private-seed product measure. No polynomial dimension bound is substituted."
+  ],
+  "verification_status": "passed: unified lake build, exact target type, all coverage declarations, and transitive axiom audits",
+  "coverage_check": {
+    "command": "lake env lean -DautoImplicit=false scripts/check_mp_coverage.lean",
+    "status": "passed",
+    "declarations": 91,
+    "axiom_reports": 16,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "verification_receipt": "verification_mp.json"
+}

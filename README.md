@@ -1,112 +1,69 @@
 # Weakly Convex Lower Bound — Lean 4 Formalization
 
-[![Lean CI](https://github.com/SiyuPan04/Weakly-Convex-Lower-Bound-Lean/actions/workflows/lean.yml/badge.svg?branch=main)](https://github.com/SiyuPan04/Weakly-Convex-Lower-Bound-Lean/actions/workflows/lean.yml)
+[![Lean CI](https://github.com/SiyuPan04/Weakly-Convex-Lower-Bound-Lean/actions/workflows/lean.yml/badge.svg)](https://github.com/SiyuPan04/Weakly-Convex-Lower-Bound-Lean/actions/workflows/lean.yml)
 
-This repository is a standalone Lean 4 verification of a deterministic
-first-order oracle lower bound for weakly convex optimization. Its only Lean
-package dependency is
-[Mathlib](https://github.com/leanprover-community/mathlib4).
+A Lean 4 formalization of oracle complexity lower bounds for finding Moreau stationary points of Lipschitz, weakly convex functions. The current manuscript is represented by the `MP` library, which builds on the analytic constructions and oracle model in `WC`.
 
-## Verified result
+## Main result
 
-For positive `G`, `rho`, `Delta`, and `eps`, under
+[`MP.main`](MP/Main.lean) proves `MP.Model.MainTheorem`. Its explicit version, `MP.main_explicit`, establishes
 
-```text
-eps^2 <= (1 / 7680) * min(G^2, rho * Delta),
-```
+$$
+\operatorname{OracleComplexity}(G,\rho,\Delta,\varepsilon,\nu)
+\;\ge\; 2^{-29}\,\frac{\rho G^2\Delta}{\varepsilon^4}
+$$
 
-the development proves a worst-case query lower bound for deterministic
-algorithms using exact function values and the full set-valued
-`rho`-subdifferential. The problem class consists of `G`-Lipschitz,
-`rho`-weakly convex functions with initial gap at most `Delta`; stationarity is
-the norm of the genuine Fréchet gradient of the literal Moreau envelope.
+for positive $G,\rho,\Delta,\varepsilon$, every failure tolerance $\nu\in[0,1)$, and
 
-The principal endpoint is
+$$
+\varepsilon\le\frac{1}{512}\min\{G,\sqrt{\rho\Delta}\},
+\qquad
+\Delta\le\frac{G^2}{\rho}\exp\!\left(\frac{G^2}{200\varepsilon^2}\right).
+$$
 
-```lean
-WeaklyConvexLowerBound.paperProblemClass_fullOracle_lowerBound_and_rate
-```
+Here $G$ is the Lipschitz bound, $\rho$ is the weak convexity parameter, and $\Delta$ bounds the initial objective gap. The constants are independent of $\nu$.
 
-It combines the formal query lower bound with
+The model covers randomized Borel algorithms with access to function values and the **complete Fréchet subdifferential**. Stationarity uses the gradient of the actual Moreau envelope. Algorithms may return an arbitrary Borel output, including a point they never queried.
 
-```text
-(1 / 47185920) * G^2 * min(rho * Delta, G^2) / eps^4 <= paperT.
-```
+## Formalized components
 
-The formalization also proves an arbitrary-output endpoint: every
-deterministic output rule used before `paperT` oracle replies can be forced to
-return a point whose stationarity exceeds `eps`.
+- Coupled hard instances, weak convexity, Lipschitz regularity, and the initial gap bound.
+- Full subdifferential formulas, source geometry, and robust oracle locality.
+- Terminal Moreau gradient barriers and the prescribed radial modification.
+- Haar random rotations, adaptive concentration, and the logarithmic dimension bound for the randomized reduction.
+- Scaling to the explicit oracle complexity lower bound.
 
-```lean
-WeaklyConvexLowerBound.paperProblemClass_outputAt_failure_before_paperT_all
-```
-
-The fixed-function zero-respecting theorem is exposed as
-
-```lean
-WeaklyConvexLowerBound.zeroRespectingMain
-```
-
-The published lower-bound endpoints are unconditional apart from the stated
-numerical assumptions: no formula bridge or oracle-selection hypothesis is
-left as an input.
+The [coverage table](MP_COVERAGE.md) maps the manuscript's **22 listed formal statements**—definitions, the hard-instance condition, and theorem-level results—to Lean declarations. The machine-readable inventory is [`mp_coverage.json`](mp_coverage.json), and [`scripts/check_mp_coverage.lean`](scripts/check_mp_coverage.lean) checks the mapped declarations and selected transitive axiom dependencies.
 
 ## Build and verify
 
-Install Lean with [elan](https://github.com/leanprover/elan), then run:
+The project pins **Lean 4.32.0** and mathlib revision `11d11a11a667a8fa8ea19d9456fe059f683e308f`. Install [elan](https://github.com/leanprover/elan), then run from the repository root:
 
-```bash
-git clone https://github.com/SiyuPan04/Weakly-Convex-Lower-Bound-Lean.git
-cd Weakly-Convex-Lower-Bound-Lean
-lake update
+```sh
 lake exe cache get
 lake build
-lake env lean WeaklyConvexLowerBound/AxiomAudit.lean
+python3 scripts/check_mp.py
 ```
 
-On Windows, the full local check is also available as:
+To run the declaration coverage check directly:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\VERIFY.ps1
+```sh
+lake env lean scripts/check_mp_coverage.lean
 ```
 
-`VERIFY.ps1` performs a project build, checks root-module coverage, runs the
-axiom audit, rejects
-proof placeholders and project-defined axioms, checks that every Lean import
-comes from Mathlib or this package, and rejects private absolute paths.
+The verification script checks source completeness, module reachability, the manuscript inventory, the build, and transitive axioms for key results. Its accepted axiom dependencies are the standard `propext`, `Classical.choice`, and `Quot.sound`; it writes a reproducibility receipt to `verification_mp.json`.
 
-## Trust and scope
+## Repository layout
 
-- The source contains no `sorry`, `admit`, `sorryAx`, `opaque` declaration, or
-  project-defined `axiom`.
-- `WeaklyConvexLowerBound/AxiomAudit.lean` prints the logical dependencies of
-  all principal endpoints.
-- The oracle is the literal full set-valued oracle, not a selected
-  representative subgradient.
-- The Moreau stationarity field is connected to an actual Fréchet derivative,
-  not an uninterpreted surrogate.
-- The present package verifies deterministic results; it does not claim a
-  randomized lower bound.
-
-## Source layout
-
-- `Foundation/`: self-contained Euclidean, differentiability, frame,
-  hidden-direction, arithmetic, and smooth-step lemmas.
-- `FullOracleModel.lean`, `Framework.lean`: causal dimension-wise deterministic
-  algorithms and the exact full-oracle model.
-- `HardInstance.lean` through `FullSubdiffCharacterization.lean`: hard function,
-  regularity, locality, and full-subdifferential semantics.
-- `MoreauSemantics.lean`, `AmbientMoreauSemantics.lean`: literal Moreau envelope
-  and genuine gradient bridge.
-- `BatchResisting.lean`, `UniformResistingOracle.lean`: deterministic resisting
-  construction.
-- `UnconditionalMain.lean`, `PaperOutput.lean`: final lower-bound and
-  arbitrary-output theorems.
-- `AxiomAudit.lean`: explicit logical-dependency audit.
-
-The project pins Lean and Mathlib versions in `lean-toolchain` and
-`lake-manifest.json` for reproducible builds.
+| Path | Purpose |
+| --- | --- |
+| [`MP/`](MP/) | Current manuscript model, constructions, randomized reduction, and main theorem |
+| [`WC/`](WC/) | Shared analytic library, full oracle model, and scaling results |
+| [`MP.lean`](MP.lean), [`WC.lean`](WC.lean) | Library entry points |
+| [`MP_COVERAGE.md`](MP_COVERAGE.md) | Statement-to-declaration mapping |
+| [`scripts/`](scripts/) | Build, coverage, and axiom verification |
+| [`mp_snapshot/`](mp_snapshot/) | Fixed manuscript source and provenance |
 
 ## License
 
-This project is released under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
