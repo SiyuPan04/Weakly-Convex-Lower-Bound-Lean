@@ -1,36 +1,42 @@
-# 弱凸优化下界的 Lean 形式化
+# 弱凸优化一阶 oracle 下界的 Lean 形式化
 
-本工程的主要形式化库为 `WCLB`（Weakly Convex Lower Bound），稿件固定快照为 `wclb_snapshot/main.tex`。原始文件及其引用图源保持原样；逐字节 SHA256 对照记录在 `wclb_snapshot/provenance.json`。
+本工程对应 Jiajin Li 和 Siyu Pan 的论文 *Optimal Oracle Complexity for Weakly Convex Optimization*，以 **2026 年 11 月 12 日版 `WC.pdf`** 为准。[逐项对照表](WCLB_COVERAGE.md)列出论文的 24 个编号陈述及其 Lean 入口；[`wclb_snapshot/`](wclb_snapshot/) 保存的是较早版本的 TeX 稿。
 
-**新稿全部 22 个正式陈述已有对应的 Lean 定义或证明，包括 `WCLB.main : WCLB.Model.MainTheorem` 和精确对数维数随机旋转归约 `WCLB.randomized_reduction`。全工程构建、覆盖检查和传递公理审计均已通过。可用 `python scripts/check_wclb.py` 复现；运行检查后生成 `verification_wclb.json` 验证回执。**
+## 主定理
 
-主定理给出显式通用常数 `c₀=1/512`、`c=2⁻²⁹`，在原稿的小精度条件和 gap 指数范围内，对所有 `ν∈[0,1)` 证明实际 oracle complexity 下界。函数类、完整 Fréchet 次微分 oracle、Hausdorff Borel 可测结构、真实 Moreau envelope 梯度及算法模型均复用已经证明的定义。
+[定理 2 的 Lean 声明](WCLB/Model.lean)和[证明 `WCLB.main`](WCLB/Main.lean)给出以下下界。设 $G,\rho,\Delta,\varepsilon>0$，若
 
-## 新稿与既有工程的关系
-
-- `WC/` 保留既有数学库及证明，原稿与旧稿中相同的 coupled construction 直接复用这些定理。
-- `WCLB/Model.lean`、`WCLB/Main.lean` 精确编码新稿主定理；`WCLB/UniformFamily.lean` 用新稿指定半径的真实 WCLB 函数族填满所有构造前提，再复用 WC 库中已经证明的缩放归约。
-- `WCLB/Construction.lean` 验证新稿的 `5M/N` gap、显式 source 半径以及 `1/(10√N)` 的未缩放终端 Moreau 梯度下界。
-- `WCLB/Radial.lean` 和 `WCLB/RadialOracle.lean` 单独验证新稿指定的半径 `R=2¹⁸(M+√(MN))`、原稿 max 函数公式、实际径向驻点下界与完整外部 oracle。
-- `WCLB/Concentration.lean`、`WCLB/AdaptiveConcentration.lean`、`WCLB/Budget.lean` 和 `WCLB/RandomizedReduction.lean` 证明新稿明确要求的对数维数界。结论使用真实 Haar 旋转与 private seed 的联合概率，并同时涵盖所有查询及任意未查询的 Borel 输出。
-
-完整次微分、鲁棒局部性和径向函数自身的 Moreau 梯度都使用实际解析对象；没有用选定次梯度或未证明的 certificate 字段代替它们。新稿终端命题采用已证明的更强 source-mixture 估计完成，原稿证明内部的二进制分组常数不是未证明的前提。
-
-## 环境与复现
-
-Lean `4.32.0`；mathlib 固定于 `11d11a11a667a8fa8ea19d9456fe059f683e308f`。
-
-```powershell
-lake exe cache get
-lake build WCLB
-python scripts/check_wclb.py
-lake env lean scripts/check_wclb_coverage.lean
+```math
+\varepsilon \le \frac{1}{512}\min\left\lbrace G,\sqrt{\rho\Delta}\right\rbrace,
+\qquad
+\Delta \le \frac{G^2}{\rho}\exp\left(\frac{G^2}{200\varepsilon^2}\right),
 ```
 
-`check_wclb.py` 是最终的新稿完整性与公理检查入口。`scripts/check_wclb_coverage.lean` 核对逐项覆盖清单中的真实声明，并打印关键证明的传递公理。最终可接受的公理依赖仅为通常的 `propext`、`Classical.choice`、`Quot.sound`。
+则对每个 $\nu\in[0,1)$，
 
-`check_wclb_coverage.lean` 已通过：94 个真实声明检查和 17 个关键结果的传递公理报告，均只含上述标准三项公理。主定理、实际 C1–C4、规定半径、完整 prefix oracle 与精确对数维数结论都在检查范围内。
+```math
+\mathcal T_{\varepsilon,\nu}\bigl(\mathcal A_{\mathrm{rand}},\mathcal F(G,\rho,\Delta)\bigr)
+\ge \frac{\rho G^2\Delta}{2^{29}\varepsilon^4}.
+```
 
-`wclb_coverage.json` 与 `WCLB_COVERAGE.md` 覆盖注释剥离后新稿中的全部 22 个正式陈述。新稿有独立的验证入口与回执；旧稿验证回执不作为新稿完成证据。
+成功概率的门槛是 $1-\nu$。每次查询返回函数值和**整个 Fréchet 次微分集合**。算法可根据私有随机种子和已收到的回复给出任意 Borel 可测输出；该点不必被查询。成功判据是该点处 Moreau 包络的梯度范数不超过 $\varepsilon$。对于固定的正参数 $G,\rho,\Delta$，[`WCLB.main_for_sufficiently_small`](WCLB/Main.lean) 还给出了对所有 $\nu$ 同时有效的精度阈值，对应论文定理 1。
 
-原稿终端命题中“点属于终端子空间”和“隐藏坐标足够小”两种情形，均由 `WCLB.terminal_stationarity` 明确给出；子空间成员的外部坐标为零也有独立证明。
+## 按论文查找证明
+
+- **未缩放构造（条件 1，第 7 页）。** [`WCLB.construction_satisfies_conditions`](WCLB/Verification.lean)验证 C1–C4：正则性、完整 oracle 的局部性、终端梯度下界及初始函数值差距。
+- **隐藏坐标与终端区域（第 13–18 页）。** [`WCLB/Certificates.lean`](WCLB/Certificates.lean) 给出活动权重的刻画、Fact 1、最大化点的位移约束与引理 9(i) 的距离界。引理 9(ii) 的严格半径界见[`source_radius_lt_three`](WCLB/Construction.lean)，引理 9(iii) 对每个次梯度的范数界见[`off_terminal_subgradient_lower`](WCLB/OffTerminal.lean)。
+- **径向修改（引理 10，第 23 页）。** [径向目标与梯度界](WCLB/Radial.lean)使用原文规定的半径，并给出式 (6.1) 的内积下界；[外部 oracle 公式](WCLB/RadialOracle.lean)同时确定函数值和完整次微分。
+- **随机归约与缩放（引理 11 及 §6.3，第 26–28 页）。** [`WCLB.randomized_reduction`](WCLB/RandomizedReduction.lean) 在式 (6.5) 的对数维度条件下，对独立的 Haar 随机正交标架和算法私有种子证明联合概率界。对标架取平均后，[`physical_joint_barrier_logarithmic`](WCLB/RandomizedReduction.lean) 给出一个固定的原尺度实例，使从第 0 步到第 $T$ 步的梯度同时超过阈值。主定理用同一个实例得到复杂度下界。
+
+## 复现核验
+
+环境固定为 Lean `4.32.0`、mathlib `11d11a11a667a8fa8ea19d9456fe059f683e308f`。在仓库根目录运行：
+
+```sh
+lake exe cache get
+python3 scripts/check_wclb.py
+```
+
+如持有论文 PDF，可改用 `python3 scripts/check_wclb.py --paper /path/to/WC.pdf` 一并核对文件。参考 PDF 的 SHA-256 是 `002d3616e51469ac2bbc2c12a3e40236b3214cdc1409e3b9bee7cb3e0df63c9c`。
+
+脚本构建项目，检查[清单](wclb_coverage.json)对应的 Lean 声明，并逐项审计传递公理依赖；允许的公理是 `propext`、`Classical.choice` 和 `Quot.sound`。本地生成的回执 `verification_wclb.json` 记录软件与源码版本及运行结果。PDF 与 Lean 声明之间的数学对应见[逐项对照表](WCLB_COVERAGE.md)，需要结合双方的定义和量词阅读。

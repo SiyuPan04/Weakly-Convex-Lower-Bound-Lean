@@ -107,18 +107,18 @@ theorem chainNearRadius_margin {N : ℕ} (hN : 0 < N) :
   have hn : 0 ≤ 1 / (320 * Real.sqrt (N : ℝ)) := by positivity
   linarith
 
-theorem chain_finiteSourceMixture_norm_sq {M N B : ℕ} {ι : Type*} [Fintype ι]
-    (hN : 256 ≤ N) (weights : ι → ℝ) (y g : ι → ChainSpace M N) (z : ChainSpace M N)
+theorem chain_finiteSourceMixture_norm_sq_of_radius {M N B : ℕ} {ι : Type*} [Fintype ι]
+    (hN : 256 ≤ N) {r : ℝ} (hr : 0 < r) (hsmall : r ≤ chainNearRadius N)
+    (weights : ι → ℝ) (y g : ι → ChainSpace M N) (z : ChainSpace M N)
     (hw : ∀ i, 0 ≤ weights i) (hwsum : ∑ i, weights i = 1)
     (hsource : ∀ i, y i ∈ majorantSources coupledFunction 2 z)
     (hgradient : ∀ i, g i ∈ subdifferential coupledFunction (y i))
-    (hcoverage : ∀ i, ‖z - y i‖ ≤ (8 : ℝ) ^ B * chainNearRadius N)
-    (hfar : ∀ q ∈ terminalRegion, chainNearRadius N < ‖z - q‖) :
+    (hcoverage : ∀ i, ‖z - y i‖ ≤ (8 : ℝ) ^ B * r)
+    (hfar : ∀ q ∈ terminalRegion, r < ‖z - q‖) :
     1 / (25 * (N : ℝ) + 8 * (B : ℝ)) ≤ ‖∑ i, weights i • g i‖ ^ 2 := by
   have hNpos : 0 < N := lt_of_lt_of_le (by norm_num) hN
   have hNR : (0 : ℝ) < N := by exact_mod_cast hNpos
-  have hr : 0 < chainNearRadius N := chainNearRadius_pos hNpos
-  let band (i : ι) : Fin (B + 1) := sourceRadiusBand B (chainNearRadius N) ‖z - y i‖ (hcoverage i)
+  let band (i : ι) : Fin (B + 1) := sourceRadiusBand B r ‖z - y i‖ (hcoverage i)
   let mass := sourceGroupMass band weights
   let vectors := sourceGroupVector band weights g
   have hm (j : Fin (B + 1)) : 0 ≤ mass j := sourceGroupMass_nonneg band weights hw j
@@ -143,7 +143,9 @@ theorem chain_finiteSourceMixture_norm_sq {M N B : ℕ} {ι : Type*} [Fintype ι
       (fun i => y i.val) ng z (fun i => hsource i.val) (fun i => hgradient i.val)
       (fun i => sourceRadiusBand_near (hcoverage i.val) i.property) hfar
     have hlower : 1 / (5 * Real.sqrt (N : ℝ)) ≤ ‖∑ i, nw i • ng i‖ :=
-      (chainNearRadius_margin hNpos).trans hnorm
+      (chainNearRadius_margin hNpos).trans ((by linarith :
+        1 / (4 * Real.sqrt (N : ℝ)) - 3 * (9 / 2 : ℝ) * chainNearRadius N ≤
+        1 / (4 * Real.sqrt (N : ℝ)) - 3 * (9 / 2 : ℝ) * r).trans hnorm)
     have hspos : 0 < Real.sqrt (N : ℝ) := Real.sqrt_pos.mpr hNR
     have hid : (1 / (5 * Real.sqrt (N : ℝ))) ^ 2 = 1 / (25 * (N : ℝ)) := by
       field_simp
@@ -166,16 +168,16 @@ theorem chain_finiteSourceMixture_norm_sq {M N B : ℕ} {ι : Type*} [Fintype ι
     let ng (i : {i // band i = j}) := g i.val
     have hnw : ∀ i, 0 ≤ nw i := fun i => div_nonneg (hw i.val) (hm j)
     have hnwsum : ∑ i, nw i = 1 := sourceGroupNormalized_sum band weights j hzero
-    let a := (8 : ℝ) ^ (j.val - 1) * chainNearRadius N
+    let a := (8 : ℝ) ^ (j.val - 1) * r
     have ha : 0 < a := mul_pos (pow_pos (by norm_num) _) hr
     have hrange (i : {i // band i = j}) : a < ‖z - y i.val‖ ∧ ‖z - y i.val‖ ≤ 8 * a := by
-      have hneq : sourceRadiusBand B (chainNearRadius N) ‖z - y i.val‖ (hcoverage i.val) ≠ 0 := by
+      have hneq : sourceRadiusBand B r ‖z - y i.val‖ (hcoverage i.val) ≠ 0 := by
         change band i.val ≠ 0
         rw [i.property]
         exact hj
       have h := sourceRadiusBand_remote (hcoverage i.val) hneq
-      change (8 : ℝ) ^ ((band i.val).val - 1) * chainNearRadius N < ‖z - y i.val‖ ∧
-        ‖z - y i.val‖ ≤ 8 * ((8 : ℝ) ^ ((band i.val).val - 1) * chainNearRadius N) at h
+      change (8 : ℝ) ^ ((band i.val).val - 1) * r < ‖z - y i.val‖ ∧
+        ‖z - y i.val‖ ≤ 8 * ((8 : ℝ) ^ ((band i.val).val - 1) * r) at h
       rw [i.property] at h
       exact h
     have hsquare := remote_source_band_mixture hN ha nw (fun i => y i.val) ng hnw hnwsum
@@ -188,18 +190,39 @@ theorem chain_finiteSourceMixture_norm_sq {M N B : ℕ} {ι : Type*} [Fintype ι
   have h := near_remote_group_aggregation hNR mass vectors htotal hcoords hnear hremote
   rwa [sourceGroupVector_sum] at h
 
+theorem chain_finiteSourceMixture_norm_sq {M N B : ℕ} {ι : Type*} [Fintype ι]
+    (hN : 256 ≤ N) (weights : ι → ℝ) (y g : ι → ChainSpace M N) (z : ChainSpace M N)
+    (hw : ∀ i, 0 ≤ weights i) (hwsum : ∑ i, weights i = 1)
+    (hsource : ∀ i, y i ∈ majorantSources coupledFunction 2 z)
+    (hgradient : ∀ i, g i ∈ subdifferential coupledFunction (y i))
+    (hcoverage : ∀ i, ‖z - y i‖ ≤ (8 : ℝ) ^ B * chainNearRadius N)
+    (hfar : ∀ q ∈ terminalRegion, chainNearRadius N < ‖z - q‖) :
+    1 / (25 * (N : ℝ) + 8 * (B : ℝ)) ≤ ‖∑ i, weights i • g i‖ ^ 2 :=
+  chain_finiteSourceMixture_norm_sq_of_radius hN (chainNearRadius_pos (by omega)) le_rfl
+    weights y g z hw hwsum hsource hgradient hcoverage hfar
+
 /-- The pointwise stationarity barrier for the entire actual Lipschitz-majorant subdifferential. -/
-theorem chainMajorant_subgradient_norm_sq_lower {M N B : ℕ} (hN : 256 ≤ N)
-    (z : ChainSpace M N) (hcoverage : chainSourceRadius M N ≤ (8 : ℝ) ^ B * chainNearRadius N)
-    (hfar : ∀ q ∈ terminalRegion, chainNearRadius N < ‖z - q‖)
+theorem chainMajorant_subgradient_norm_sq_lower_of_radius {M N B : ℕ} (hN : 256 ≤ N)
+    {r : ℝ} (hr : 0 < r) (hsmall : r ≤ chainNearRadius N)
+    (z : ChainSpace M N) (hcoverage : chainSourceRadius M N ≤ (8 : ℝ) ^ B * r)
+    (hfar : ∀ q ∈ terminalRegion, r < ‖z - q‖)
     {v : ChainSpace M N} (hv : v ∈ subdifferential chainMajorant z) :
     1 / (25 * (N : ℝ) + 8 * (B : ℝ)) ≤ ‖v‖ ^ 2 := by
   rw [chainMajorant_subdifferential hN, mem_convexHull_iff_exists_fintype] at hv
   obtain ⟨ι, inst, weights, g, hw, hsum, hslopes, hvec⟩ := hv
   letI : Fintype ι := inst
   choose y hy hg using hslopes
-  have h := chain_finiteSourceMixture_norm_sq (B := B) hN weights y g z hw hsum hy hg
+  have h := chain_finiteSourceMixture_norm_sq_of_radius (B := B) hN hr hsmall weights y g z hw hsum hy hg
     (fun i => (chain_source_radius hN (hy i)).trans hcoverage) hfar
   rwa [hvec] at h
+
+/-- The pointwise stationarity barrier for the entire actual Lipschitz-majorant subdifferential. -/
+theorem chainMajorant_subgradient_norm_sq_lower {M N B : ℕ} (hN : 256 ≤ N)
+    (z : ChainSpace M N) (hcoverage : chainSourceRadius M N ≤ (8 : ℝ) ^ B * chainNearRadius N)
+    (hfar : ∀ q ∈ terminalRegion, chainNearRadius N < ‖z - q‖)
+    {v : ChainSpace M N} (hv : v ∈ subdifferential chainMajorant z) :
+    1 / (25 * (N : ℝ) + 8 * (B : ℝ)) ≤ ‖v‖ ^ 2 :=
+  chainMajorant_subgradient_norm_sq_lower_of_radius hN (chainNearRadius_pos (by omega)) le_rfl
+    z hcoverage hfar hv
 
 end WC

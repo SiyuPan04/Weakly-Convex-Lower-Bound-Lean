@@ -43,6 +43,29 @@ theorem scaled_radius_ge_one {M N : ℕ} (hM : 2 ≤ M) : 1 ≤ (2 / 3 : ℝ) * 
   rw [show (2 : ℝ) ^ 18 = 262144 by norm_num]
   nlinarith [Real.sqrt_nonneg ((M * N : ℕ) : ℝ)]
 
+theorem chainRadialConstant_mul_le {M N : ℕ} (hN : 256 ≤ N) :
+    chainRadialConstant M N * N ≤ 18 * Real.sqrt ((M * N : ℕ) : ℝ) + 6 * M := by
+  have hNR : (0 : ℝ) < N := by exact_mod_cast (show 0 < N by omega)
+  have hm : (0 : ℝ) ≤ M := by positivity
+  have hb := source_radius_bound (M := M) hN
+  have hrad : chainSourceRadius M N * N ≤ 3 * M := by
+    have h := (le_div_iff₀ (by positivity : 0 < 53 * (N : ℝ))).mp hb
+    nlinarith [mul_nonneg hm hNR.le]
+  have hid : chainRadialConstant M N * N =
+      18 * Real.sqrt ((M * N : ℕ) : ℝ) + 2 * (chainSourceRadius M N * N) := by
+    unfold chainRadialConstant
+    field_simp
+  rw [hid]
+  linarith
+
+/-- The subgradient inner product bound (6.1) for the Lipschitz majorant. -/
+theorem radial_subgradient_inner_lower {M N : ℕ} (hN : 256 ≤ N)
+    {z g : ChainSpace M N} (hg : g ∈ subdifferential chainMajorant z) :
+    -((18 * Real.sqrt ((M * N : ℕ) : ℝ) + 6 * M) / N) ≤ inner ℝ g z := by
+  have hNR : (0 : ℝ) < N := by exact_mod_cast (show 0 < N by omega)
+  exact (neg_le_neg ((le_div_iff₀ hNR).mpr (chainRadialConstant_mul_le hN))).trans
+    (chainMajorant_radial_inner_lower hN hg)
+
 theorem radial_radius_margin {M N : ℕ} (hM : 2 ≤ M) (hN : 256 ≤ N) :
     96 * chainRadialConstant M N * (49 * (N : ℝ)) ≤
       (2 / 3 : ℝ) * radialRadius M N - (5 * (M : ℝ) / N) / 3 := by
@@ -50,17 +73,7 @@ theorem radial_radius_margin {M N : ℕ} (hM : 2 ≤ M) (hN : 256 ≤ N) :
   have hn : (1 : ℝ) ≤ N := by exact_mod_cast (show 1 ≤ N by omega)
   have hm : (0 : ℝ) ≤ M := by positivity
   have hs : 0 ≤ Real.sqrt ((M * N : ℕ) : ℝ) := Real.sqrt_nonneg _
-  have hb := source_radius_bound (M := M) hN
-  have hrad : chainSourceRadius M N * N ≤ 3 * M := by
-    have h := (le_div_iff₀ (by positivity : 0 < 53 * (N : ℝ))).mp hb
-    nlinarith [mul_nonneg hm hNR.le]
-  have hc : chainRadialConstant M N * N ≤ 18 * Real.sqrt ((M * N : ℕ) : ℝ) + 6 * M := by
-    have hid : chainRadialConstant M N * N =
-        18 * Real.sqrt ((M * N : ℕ) : ℝ) + 2 * (chainSourceRadius M N * N) := by
-      unfold chainRadialConstant
-      field_simp
-    rw [hid]
-    linarith
+  have hc := chainRadialConstant_mul_le (M := M) hN
   have hgap : 5 * (M : ℝ) / N ≤ 5 * M := by
     apply div_le_self (by positivity) hn
   unfold radialRadius

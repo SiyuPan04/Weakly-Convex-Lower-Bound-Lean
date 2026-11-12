@@ -1,30 +1,28 @@
 {
-  "source": "wclb_snapshot/main.tex",
-  "sha256": "29efd2ce9866a9b719b4b5d9865d3b216cacfe23823ce43fdd9114e11f670f13",
-  "goal": "Formalization of the weakly convex lower bound manuscript, including its literal logarithmic dimension reduction.",
+  "source": "WC.pdf",
+  "sha256": "002d3616e51469ac2bbc2c12a3e40236b3214cdc1409e3b9bee7cb3e0df63c9c",
+  "pages": 30,
   "main_theorem": "WCLB.main : WCLB.Model.MainTheorem",
-  "status": "proofs_complete",
   "items": [
     {
       "environment": "theorem",
-      "title": "Informal",
-      "line": 557,
-      "labels": [],
+      "number": 1,
+      "page": 3,
+      "title": "Lower bound for all sufficiently small positive accuracies",
       "status": "proved",
       "modules": [
         "WCLB/Main.lean"
       ],
       "declarations": [
-        "WCLB.main",
-        "WCLB.main_explicit"
-      ],
-      "notes": "The exact main theorem implies the informal asymptotic statement, using the actual prescribed-radius WCLB hard family."
+        "WCLB.main_for_sufficiently_small",
+        "WCLB.main_for_sufficiently_small_nonneg_gap"
+      ]
     },
     {
       "environment": "definition",
+      "number": 1,
+      "page": 4,
       "title": "Function class",
-      "line": 649,
-      "labels": [],
       "status": "formalized",
       "modules": [
         "WC/Basic.lean",
@@ -37,17 +35,15 @@
         "WC.GapBound",
         "WC.Admissible",
         "WC.gapBound_iff_inf",
-        "WCLB.Model.Instance"
-      ],
-      "notes": "GapBound is proved equivalent to the bounded-below infimum formulation."
+        "WCLB.Model.Instance",
+        "WCLB.Model.positiveDimensionalInstances"
+      ]
     },
     {
       "environment": "definition",
-      "title": "$\\epsilon$-stationary point",
-      "line": 664,
-      "labels": [
-        "def:stationary"
-      ],
+      "number": 2,
+      "page": 5,
+      "title": "Stationarity of the Moreau envelope",
       "status": "formalized",
       "modules": [
         "WC/Moreau.lean",
@@ -59,14 +55,13 @@
         "WC.moreau_hasGradientAt",
         "WC.moreau_gradient_eq",
         "WCLB.Model.successProbability"
-      ],
-      "notes": "Uses the actual infimum Moreau envelope and mathlib gradient, with actual proximal minimizers."
+      ]
     },
     {
       "environment": "definition",
-      "title": "{First-order oracle}",
-      "line": 689,
-      "labels": [],
+      "number": 3,
+      "page": 5,
+      "title": "First-order oracle",
       "status": "formalized",
       "modules": [
         "WC/Oracle.lean",
@@ -77,16 +72,13 @@
         "WC.fullOracle",
         "WC.fullOracle_measurable",
         "WC.parameterized_fullOracle_measurable"
-      ],
-      "notes": "The entire Frechet subdifferential is compact, convex, nonempty and Hausdorff-Borel. No chosen-subgradient replacement is used."
+      ]
     },
     {
       "environment": "definition",
+      "number": 4,
+      "page": 5,
       "title": "Randomized first-order algorithm",
-      "line": 697,
-      "labels": [
-        "def:randomized-algorithm"
-      ],
       "status": "formalized",
       "modules": [
         "WC/Model.lean",
@@ -97,16 +89,13 @@
         "WCLB.Model.BorelAlgorithm",
         "WCLB.Model.trajectory",
         "WC.Model.UnitBorelAlgorithm.extend_trajectory"
-      ],
-      "notes": "Total-real Borel seed rules are equivalent to the paper unit-interval rules by a proved continuous clamp extension."
+      ]
     },
     {
       "environment": "definition",
+      "number": 5,
+      "page": 5,
       "title": "Oracle complexity",
-      "line": 736,
-      "labels": [
-        "def:complexity-algorithm-class"
-      ],
       "status": "formalized",
       "modules": [
         "WC/Model.lean",
@@ -118,41 +107,37 @@
         "WCLB.Model.hittingTime",
         "WCLB.Model.oracleComplexity",
         "WCLB.Model.oracleComplexityOn",
-        "WCLB.Model.oracleComplexityOn_univ"
-      ],
-      "notes": "Infimum over algorithms, supremum over instances, then earliest successful integer time; empty success set gives infinity. Arbitrary subclasses are explicit."
+        "WCLB.Model.oracleComplexityOn_univ",
+        "WCLB.Model.positiveDimensionalComplexity",
+        "WCLB.Model.hittingTime_zero_dimension",
+        "WCLB.Model.positiveDimensionalComplexity_eq"
+      ]
     },
     {
       "environment": "theorem",
-      "title": "Main randomized lower bound",
-      "line": 772,
-      "labels": [
-        "thm:main"
-      ],
+      "number": 2,
+      "page": 6,
+      "title": "Explicit randomized lower bound",
       "status": "proved",
       "modules": [
         "WCLB/Model.lean",
         "WCLB/Main.lean",
-        "WCLB/UniformFamily.lean",
-        "WCLB/Family.lean",
-        "WC/LowerReduction.lean"
+        "WCLB/RandomizedReduction.lean"
       ],
       "declarations": [
         "WCLB.Model.MainTheorem",
         "WCLB.small_accuracy_ratios",
-        "WCLB.uniformFamilies",
+        "WCLB.physical_hard_instance_logarithmic",
         "WCLB.main_explicit",
-        "WCLB.main"
-      ],
-      "notes": "Proved with universal constants c0=1/512 and c=2^-29, independent of confidence. The final proof uses the actual WCLB fixed-radius family; the shared WC analytic/scaling proof is reused. The logarithmic-dimension statement is also proved separately."
+        "WCLB.main",
+        "WCLB.main_positive_dimension"
+      ]
     },
     {
       "environment": "condition",
+      "number": 1,
+      "page": 7,
       "title": "Unscaled hard instance properties",
-      "line": 870,
-      "labels": [
-        "cond:hard-instance"
-      ],
       "status": "proved",
       "modules": [
         "WCLB/Conditions.lean",
@@ -161,33 +146,26 @@
       "declarations": [
         "WCLB.UnscaledHardInstanceConditions",
         "WCLB.construction_satisfies_conditions"
-      ],
-      "notes": "All C1-C4 fields are filled with actual proofs. Natural index r represents paper time t=r-1, including t=-1."
+      ]
     },
     {
       "environment": "lemma",
+      "number": 1,
+      "page": 8,
       "title": "Tilted-block locality",
-      "line": 1003,
-      "labels": [
-        "lem:tilted-block-locality"
-      ],
       "status": "proved",
       "modules": [
         "WC/BlockSubgradient.lean"
       ],
       "declarations": [
         "WC.euclideanTiltedBlock_frechetSubgradient_locality"
-      ],
-      "notes": "Exact support of every actual Frechet subgradient in the first n+1 coordinates."
+      ]
     },
     {
       "environment": "lemma",
+      "number": 2,
+      "page": 10,
       "title": "Variational representation",
-      "line": 1153,
-      "labels": [
-        "lem:max-representation",
-        "eq:Fw"
-      ],
       "status": "proved",
       "modules": [
         "WC/Variational.lean",
@@ -198,16 +176,13 @@
         "WC.coupledFunction_variational",
         "WC.weightedCoupledFunction_relay_expansion",
         "WC.weightedCoupledFunction_grouped"
-      ],
-      "notes": "The inner maximum is attained over the actual nonnegative Euclidean unit ball, with the exact relay representation."
+      ]
     },
     {
       "environment": "lemma",
+      "number": 3,
+      "page": 11,
       "title": "Progress regularity",
-      "line": 1208,
-      "labels": [
-        "lem:progress-regularity"
-      ],
       "status": "proved",
       "modules": [
         "WC/Block.lean",
@@ -218,17 +193,16 @@
         "WC.hasGradientAt_euclideanProgress",
         "WC.progressGradient_norm_le",
         "WC.progressGradient_norm_sub_le",
-        "WC.monotone_blockProgress"
-      ],
-      "notes": "Actual clipped-cubic derivatives, endpoint derivatives, gradient bounds and monotonicity are proved."
+        "WC.monotone_blockProgress",
+        "WC.blockProgress_nonneg",
+        "WC.blockProgress_le_one"
+      ]
     },
     {
       "environment": "lemma",
+      "number": 4,
+      "page": 11,
       "title": "Weak convexity of the coupled function",
-      "line": 1264,
-      "labels": [
-        "lem:coupled-curvature"
-      ],
       "status": "proved",
       "modules": [
         "WC/CoupledCurvature.lean",
@@ -238,16 +212,13 @@
         "WC.weaklyConvex_smoothBlockTerm",
         "WC.weaklyConvex_weightedCoupledFunction",
         "WC.weaklyConvex_coupledFunction"
-      ],
-      "notes": "Actual modulus 9/2 of the coupled function, derived from the exact variational maximum."
+      ]
     },
     {
       "environment": "proposition",
+      "number": 1,
+      "page": 12,
       "title": "Majorant regularity",
-      "line": 1313,
-      "labels": [
-        "prop:regularity"
-      ],
       "status": "proved",
       "modules": [
         "WC/ChainMajorant.lean",
@@ -260,40 +231,17 @@
         "WC.chainMajorant_weaklyConvex",
         "WC.chainMajorant_lower_bound",
         "WC.coupledFunction_coordinate_antitone"
-      ],
-      "notes": "Finiteness, boundedness below, 2-Lipschitz regularity, weak convexity and coordinate antitonicity are proved."
+      ]
     },
     {
       "environment": "lemma",
-      "title": "Width of the diagonal filtration",
-      "line": 1409,
-      "labels": [
-        "lem:diagonal-width"
-      ],
-      "status": "proved",
-      "modules": [
-        "WC/DiagonalSubspaces.lean",
-        "WC/Numerics.lean"
-      ],
-      "declarations": [
-        "WC.diagonal_filtration_width",
-        "WC.diagonal_quotient_finrank",
-        "WC.diagonal_initial_space"
-      ],
-      "notes": "Literal direct sum, quotient dimension equality and width at most five, including the initial layer."
-    },
-    {
-      "environment": "lemma",
+      "number": 5,
+      "page": 13,
       "title": "Complete raw subdifferential",
-      "line": 1448,
-      "labels": [
-        "lem:full-subdiff",
-        "eq:full-subdiff",
-        "eq:block-subgradient"
-      ],
       "status": "proved",
       "modules": [
-        "WC/RegroupedSubdifferential.lean"
+        "WC/RegroupedSubdifferential.lean",
+        "WCLB/Certificates.lean"
       ],
       "declarations": [
         "WC.subdifferential_coupledFunction_blockwise",
@@ -302,18 +250,15 @@
         "WC.coupledBlockSubgradients_convex",
         "WC.coupledBlockSubgradients_isCompact",
         "WC.coupledProgressCoefficient_mem_Icc",
-        "WC.active_coupled_weight_score_nonneg"
-      ],
-      "notes": "The literal union over active weights and blockwise formula, including compactness, convexity and coefficient bounds."
+        "WC.active_coupled_weight_score_nonneg",
+        "WCLB.active_weight_characterization"
+      ]
     },
     {
       "environment": "lemma",
+      "number": 6,
+      "page": 13,
       "title": "Sources and complete majorant subdifferential",
-      "line": 1527,
-      "labels": [
-        "newrand:sources",
-        "newrand:source-formula"
-      ],
       "status": "proved",
       "modules": [
         "WC/ChainMajorant.lean",
@@ -326,16 +271,13 @@
         "WC.chainMajorant_sources_isCompact",
         "WC.chainMajorant_subdifferential",
         "WCLB.source_radius_bound"
-      ],
-      "notes": "Actual maximizing points are nonempty and compact; the full subdifferential is their actual source-slope convex hull. The explicit radius bound is stronger than local boundedness."
+      ]
     },
     {
       "environment": "lemma",
+      "number": 7,
+      "page": 14,
       "title": "Source order and remote singleton",
-      "line": 1572,
-      "labels": [
-        "lem:source-order"
-      ],
       "status": "proved",
       "modules": [
         "WCLB/Locality.lean",
@@ -344,17 +286,13 @@
       "declarations": [
         "WCLB.source_order",
         "WCLB.remote_source_subdifferential"
-      ],
-      "notes": "Every maximizing source lies below the query coordinatewise; every remote source has the exact singleton subdifferential."
+      ]
     },
     {
       "environment": "proposition",
+      "number": 2,
+      "page": 14,
       "title": "Robust complete-oracle identity",
-      "line": 1642,
-      "labels": [
-        "newrand:robust",
-        "newrand:robust-identity"
-      ],
       "status": "proved",
       "modules": [
         "WCLB/Locality.lean",
@@ -365,40 +303,76 @@
         "WCLB.robust_oracle_identity",
         "WC.chainMajorant_diagonalMask_eq",
         "WC.chainMajorant_diagonalMask_subdifferential_eq"
+      ]
+    },
+    {
+      "environment": "fact",
+      "number": 1,
+      "page": 15,
+      "title": "Order, activity and relay gates on unrevealed coordinates",
+      "status": "proved",
+      "modules": [
+        "WCLB/Certificates.lean"
       ],
-      "notes": "Exact function value, full subdifferential basepoint identity and support containment, for every actual source and every full subgradient."
+      "declarations": [
+        "WCLB.lastStartedBlock",
+        "WCLB.fact_one"
+      ]
+    },
+    {
+      "environment": "lemma",
+      "number": 8,
+      "page": 15,
+      "title": "Support of the displacement of a remote maximizing source",
+      "status": "proved",
+      "modules": [
+        "WCLB/Certificates.lean"
+      ],
+      "declarations": [
+        "WCLB.remote_source_displacement"
+      ]
     },
     {
       "environment": "proposition",
-      "title": "Terminal-layer stationarity",
-      "line": 2040,
-      "labels": [
-        "prop:terminal-stationarity"
-      ],
+      "number": 3,
+      "page": 18,
+      "title": "Terminal horizon and Moreau stationarity barrier",
       "status": "proved",
       "modules": [
+        "WC/Numerics.lean",
         "WCLB/Construction.lean",
-        "WCLB/Verification.lean",
-        "WC/LiftedChainBarrier.lean",
         "WCLB/TerminalSubspace.lean"
       ],
       "declarations": [
-        "WCLB.unscaled_terminal_barrier",
+        "WC.horizon_bound_real",
         "WCLB.terminal_diagonal_barrier",
-        "WC.horizon_bound",
-        "WCLB.zero_outside_of_mem_coordinateSpan",
-        "WCLB.terminal_subspace_barrier",
         "WCLB.terminal_stationarity"
+      ]
+    },
+    {
+      "environment": "lemma",
+      "number": 9,
+      "page": 18,
+      "title": "Inactive set geometry, source radius and off-set subgradient bound",
+      "status": "proved",
+      "modules": [
+        "WCLB/Certificates.lean",
+        "WCLB/Construction.lean",
+        "WCLB/OffTerminal.lean"
       ],
-      "notes": "The explicit terminal-stationarity conjunction proves the horizon bound, the literal subspace case and the robust hidden-coordinate case. The reverse coordinateSpan-to-zero-outside bridge is proved, not left as an informal inference."
+      "declarations": [
+        "WCLB.inactiveSet",
+        "WCLB.inactiveSet_eq_terminalRegion",
+        "WCLB.terminal_geometry",
+        "WCLB.source_radius_lt_three",
+        "WCLB.off_terminal_subgradient_lower"
+      ]
     },
     {
       "environment": "proposition",
+      "number": 4,
+      "page": 22,
       "title": "Initial gap",
-      "line": 2535,
-      "labels": [
-        "newrand:gap"
-      ],
       "status": "proved",
       "modules": [
         "WCLB/Construction.lean",
@@ -409,16 +383,13 @@
         "WC.chainMajorant_zero",
         "WC.chainMajorant_gap",
         "WC.chainMajorant_infimum"
-      ],
-      "notes": "The new literal 5M/N bound follows from the already proved exact minimum and exact initial-gap identity."
+      ]
     },
     {
       "environment": "lemma",
+      "number": 10,
+      "page": 23,
       "title": "Properties of the radial modification",
-      "line": 2667,
-      "labels": [
-        "lem:radial-stationarity"
-      ],
       "status": "proved",
       "modules": [
         "WCLB/Radial.lean",
@@ -431,18 +402,15 @@
         "WCLB.radial_moreau_barrier",
         "WCLB.radial_exterior_gradient",
         "WCLB.radial_exterior_oracle",
-        "WCLB.radialObjectiveAt_exterior_fullOracle_eq"
-      ],
-      "notes": "Uses exactly R=2^18(M+sqrt(MN)) and the paper normalized max formula. The actual own-envelope barrier and complete exterior oracle are proved; this is not an undocumented reuse of the older enlarged radius."
+        "WCLB.radialObjectiveAt_exterior_fullOracle_eq",
+        "WCLB.radial_subgradient_inner_lower"
+      ]
     },
     {
       "environment": "lemma",
+      "number": 11,
+      "page": 26,
       "title": "Randomized reduction",
-      "line": 2901,
-      "labels": [
-        "lem:randomized-reduction",
-        "eq:rotation-dimension"
-      ],
       "status": "proved",
       "modules": [
         "WCLB/Concentration.lean",
@@ -460,27 +428,10 @@
         "WCLB.logarithmic_dimension_budget_ennreal",
         "WCLB.family_barrierEvent_measurable",
         "WCLB.joint_barrier_of_exponential_budget",
-        "WCLB.randomized_reduction"
-      ],
-      "notes": "The exact logarithmic threshold is proved with a closed-event exponential spherical cap bound, genuine stabilizer averaging, all-query and arbitrary-output oracle coupling, and the actual Haar-frame/private-seed product probability. No conditional law or tail estimate is assumed."
+        "WCLB.randomized_reduction",
+        "WCLB.randomized_reduction_fixed_frame",
+        "WCLB.physical_joint_barrier_logarithmic"
+      ]
     }
-  ],
-  "representation_notes": [
-    "The WCLB construction is exactly the existing coupled function and least 2-Lipschitz majorant, with zero-based coordinates.",
-    "The final main proof uses WCLB.uniformFamilies and the actual prescribed WCLB radius R=2^18(M+sqrt(MN)). The shared WC scaling and analytic library are reused.",
-    "The exact logarithmic dimension bound is independently proved by WCLB.randomized_reduction on the actual Haar-frame/private-seed product measure. No polynomial dimension bound is substituted."
-  ],
-  "verification_status": "passed: unified lake build, exact target type, all coverage declarations, and transitive axiom audits",
-  "coverage_check": {
-    "command": "lake env lean -DautoImplicit=false scripts/check_wclb_coverage.lean",
-    "status": "passed",
-    "declarations": 91,
-    "axiom_reports": 16,
-    "allowed_axioms": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  "verification_receipt": "verification_wclb.json"
+  ]
 }

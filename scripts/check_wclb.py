@@ -1,9 +1,10 @@
-"""Verify the weakly convex lower bound library, its module graph and proof axioms."""
-from pathlib import Path
+"""Build the libraries and verify their statement map for the pinned WC.pdf."""
+import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
 import os
+from pathlib import Path
 import re
 import shutil
 import subprocess
@@ -13,14 +14,26 @@ from check_complete import without_comments
 
 ROOT = Path(__file__).resolve().parents[1]
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
-TARGETS = [
-    "WCLB.main", "WCLB.main_explicit", "WCLB.construction_satisfies_conditions",
-    "WCLB.radial_moreau_barrier", "WCLB.radial_exterior_oracle",
-    "WCLB.Concentration.sphere_mgf_le",
-    "WCLB.Concentration.adaptive_projection_tail_product",
-    "WCLB.family_barrierEvent_measurable", "WCLB.randomized_reduction",
-    "WCLB.terminal_stationarity",
+PAPER_SHA256 = "002d3616e51469ac2bbc2c12a3e40236b3214cdc1409e3b9bee7cb3e0df63c9c"
+# Numbered headings transcribed from the printed pages of the pinned PDF.
+HEADINGS = [
+    ("theorem", 1, 3), ("definition", 1, 4), ("definition", 2, 5),
+    ("definition", 3, 5), ("definition", 4, 5), ("definition", 5, 5),
+    ("theorem", 2, 6), ("condition", 1, 7), ("lemma", 1, 8),
+    ("lemma", 2, 10), ("lemma", 3, 11), ("lemma", 4, 11),
+    ("proposition", 1, 12), ("lemma", 5, 13), ("lemma", 6, 13),
+    ("lemma", 7, 14), ("proposition", 2, 14), ("fact", 1, 15),
+    ("lemma", 8, 15), ("proposition", 3, 18), ("lemma", 9, 18),
+    ("proposition", 4, 22), ("lemma", 10, 23), ("lemma", 11, 26),
 ]
+
+
+def fail(message):
+    raise SystemExit(f"INCOMPLETE: {message}")
+
+
+def sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def run(command, env, quiet=False):
@@ -35,49 +48,49 @@ def run(command, env, quiet=False):
 
 
 def main():
-    sources = sorted((ROOT / "WC").rglob("*.lean")) + sorted((ROOT / "WCLB").rglob("*.lean"))
-    for path in sources:
-        if re.search(r"\b(sorry|admit|axiom|opaque|unsafe)\b",
-                     without_comments(path.read_text(encoding="utf-8-sig"))):
-            raise SystemExit(f"INCOMPLETE: proof escape in {path}")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--paper", type=Path, help="verify these PDF bytes against the pinned manuscript")
+    args = parser.parse_args()
+    coverage = json.loads((ROOT / "wclb_coverage.json").read_text(encoding="utf-8"))
+    if (coverage["source"], coverage["sha256"], coverage["pages"]) != ("WC.pdf", PAPER_SHA256, 30):
+        fail("wrong manuscript identity in the coverage map")
+    if args.paper is not None and (not args.paper.is_file() or sha256(args.paper) != PAPER_SHA256):
+        fail("the supplied PDF does not match the manuscript used for this statement map")
+    items = coverage["items"]
+    if [(i["environment"], i["number"], i["page"]) for i in items] != HEADINGS:
+        fail("coverage does not match the numbered headings and pages in the pinned PDF")
+
+    sources = [p for lib in ("WC", "WCLB")
+               for p in [ROOT / f"{lib}.lean", *sorted((ROOT / lib).rglob("*.lean"))]]
+    source_paths = {p.relative_to(ROOT).as_posix() for p in sources}
+    mapped = set()
+    for i in items:
+        if (i["status"] not in {"proved", "formalized"} or not i["declarations"] or
+                not i["modules"] or not set(i["modules"]) <= source_paths):
+            fail(f"missing proof or module mapping for {i['environment']} {i['number']}")
+        mapped.update(i["declarations"])
+
+    imports = {}
+    for p in sources:
+        code = without_comments(p.read_text(encoding="utf-8-sig"))
+        if re.search(r"\b(sorry|admit|axiom|opaque|unsafe)\b", code):
+            fail(f"proof escape in {p.relative_to(ROOT)}")
+        module = ".".join(p.relative_to(ROOT).with_suffix("").parts)
+        imports[module] = re.findall(r"^import\s+((?:WC|WCLB)(?:\.\w+)*)\s*$", code, re.M)
     reachable, todo = set(), ["WC", "WCLB"]
     while todo:
         module = todo.pop()
-        if module in reachable:
-            continue
-        reachable.add(module)
-        path = ROOT / (module.replace(".", "/") + ".lean")
-        todo.extend(re.findall(r"^import\s+((?:WC|WCLB)(?:\.[\w]+)*)\s*$",
-                              without_comments(path.read_text(encoding="utf-8-sig")), re.M))
-    missing = [str(p.relative_to(ROOT)) for p in sources
-               if ".".join(p.relative_to(ROOT).with_suffix("").parts) not in reachable]
-    if missing:
-        raise SystemExit(f"INCOMPLETE: modules outside checked umbrellas: {missing}")
-    coverage = json.loads((ROOT / "wclb_coverage.json").read_text(encoding="utf-8-sig"))
-    unfinished = [i for i in coverage["items"] if i["status"] not in {"proved", "formalized"}]
-    if unfinished:
-        raise SystemExit(f"INCOMPLETE: {len(unfinished)} manuscript statements lack proofs")
-    snapshot = ROOT / "wclb_snapshot" / "main.tex"
-    tex = re.sub(r"(?<!\\)%[^\n]*", "", snapshot.read_text(encoding="utf-8-sig"))
-    inventory = []
-    for entry in re.finditer(r"\\begin\{(theorem|lemma|proposition|corollary|definition|condition)\}"
-                             r"(?:\[([^\]]*)\])?", tex):
-        end = tex.find("\\end{" + entry[1] + "}", entry.end())
-        if end < 0:
-            raise SystemExit("INCOMPLETE: unclosed formal manuscript statement")
-        inventory.append((entry[1], tex[:entry.start()].count("\n") + 1,
-                          re.findall(r"\\label\{([^}]+)\}", tex[entry.end():end])))
-    mapped_inventory = [(i["environment"], i["line"], i.get("labels", [])) for i in coverage["items"]]
-    if inventory != mapped_inventory:
-        raise SystemExit("INCOMPLETE: coverage does not match the manuscript's formal statements")
-    mapped_names = {n for item in coverage["items"] for n in item.get("declarations", [])}
-    checked_names = set(re.findall(r"^#check\s+@?([\w.]+)",
-        (ROOT / "scripts" / "check_wclb_coverage.lean").read_text(encoding="utf-8-sig"), re.M))
-    if mapped_names - checked_names:
-        raise SystemExit(f"INCOMPLETE: unchecked mapped declarations {sorted(mapped_names - checked_names)}")
-    source_hash = hashlib.sha256(snapshot.read_bytes()).hexdigest()
-    if source_hash != "29efd2ce9866a9b719b4b5d9865d3b216cacfe23823ce43fdd9114e11f670f13":
-        raise SystemExit("INCOMPLETE: unexpected WCLB manuscript snapshot")
+        if module not in reachable:
+            reachable.add(module)
+            todo.extend(imports[module])
+    if missing := imports.keys() - reachable:
+        fail(f"modules outside checked umbrellas: {sorted(missing)}")
+
+    check = ROOT / "scripts" / "check_wclb_coverage.lean"
+    targets = set(re.findall(r"^#print axioms ([\w.]+)$", without_comments(check.read_text()), re.M))
+    if missing := mapped - targets:
+        fail(f"no axiom check for {sorted(missing)}")
+
     env = dict(os.environ)
     lake = shutil.which("lake")
     if lake is None:
@@ -86,38 +99,32 @@ def main():
         lake = str(bindir / ("lake.exe" if os.name == "nt" else "lake"))
         env["PATH"] = str(bindir) + os.pathsep + env.get("PATH", "")
     run([lake, "--log-level=error", "build"], env)
-    check = ROOT / "scripts" / "_wclb_check.lean"
-    check.write_text("import WCLB\nexample : WCLB.Model.MainTheorem := WCLB.main\n" +
-                     "\n".join(f"#print axioms {name}" for name in TARGETS) + "\n", encoding="utf-8")
-    try:
-        output = run([lake, "env", "lean", "-DautoImplicit=false", str(check)], env)
-    finally:
-        check.unlink(missing_ok=True)
-    reports = re.findall(r"'([^']+)' depends on axioms:\s*\[([^\]]*)\]", output, re.S)
-    if {name for name, _ in reports} != set(TARGETS):
-        raise SystemExit("INCOMPLETE: missing transitive axiom reports")
-    for name, report in reports:
-        if {x.strip() for x in report.split(",") if x.strip()} - ALLOWED:
-            raise SystemExit(f"INCOMPLETE: unexpected axioms in {name}")
-    run([lake, "env", "lean", "-DautoImplicit=false", "scripts/check_wclb_coverage.lean"], env, quiet=True)
-    print(f"All {len(coverage['items'])} manuscript coverage entries resolve against the checked Lean project.")
-    checked = [ROOT / "WC.lean", ROOT / "WCLB.lean", *sources]
+    output = run([lake, "env", "lean", "-DautoImplicit=false", str(check)], env, quiet=True)
+    reports = {n: set(filter(None, (a.strip() for a in axioms.split(","))))
+               for n, axioms in re.findall(r"^'([^']+)' depends on axioms:\s*\[([^\]]*)\]", output, re.M)}
+    for n in re.findall(r"^'([^']+)' does not depend on any axioms", output, re.M):
+        reports[n] = set()
+    if reports.keys() != targets:
+        fail(f"missing or unexpected axiom reports: {sorted(reports.keys() ^ targets)}")
+    for n, axioms in reports.items():
+        if extra := axioms - ALLOWED:
+            fail(f"unexpected axioms in {n}: {sorted(extra)}")
+
     receipt = {
-        "verified_at_utc": datetime.now(timezone.utc).isoformat(),
-        "result": "passed", "theorem": "WCLB.main : WCLB.Model.MainTheorem",
-        "c0": "1/512", "c": "1/2^29", "manuscript_statements": len(coverage["items"]),
-        "wclb_modules": len(list((ROOT / "WCLB").rglob("*.lean"))),
-        "manuscript_inventory_exact_match": True,
-        "mapped_declarations_checked": len(mapped_names),
-        "source_snapshot_sha256": source_hash,
+        "verified_at_utc": datetime.now(timezone.utc).isoformat(), "result": "passed",
+        "theorem": coverage["main_theorem"], "paper_sha256": PAPER_SHA256,
+        "supplied_pdf_hash_verified": args.paper is not None,
+        "numbered_statements_checked": len(items), "mapped_declarations_checked": len(mapped),
         "lean_toolchain": (ROOT / "lean-toolchain").read_text().strip(),
-        "axiom_targets": TARGETS, "allowed_axioms": sorted(ALLOWED),
-        "source_sha256": {str(p.relative_to(ROOT)).replace("\\", "/"):
-                          hashlib.sha256(p.read_bytes()).hexdigest() for p in checked},
+        "allowed_axioms": sorted(ALLOWED), "axiom_dependencies": {n: sorted(v) for n,v in sorted(reports.items())},
+        "source_sha256": {p.relative_to(ROOT).as_posix(): sha256(p) for p in
+                          [*sources, ROOT / "wclb_coverage.json", check, Path(__file__).resolve()]},
     }
-    (ROOT / "verification_wclb.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
-                                              encoding="utf-8")
-    print("COMPLETE: WCLB main, all manuscript coverage, exact logarithmic reduction and axiom checks passed.")
+    (ROOT / "verification_wclb.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+    print(f"PASS: {len(items)} numbered statements; {len(mapped)} mapped declarations; "
+          f"{len(reports)} transitive axiom checks.")
+    if args.paper:
+        print(f"PDF bytes verified: {PAPER_SHA256}")
 
 
 if __name__ == "__main__":

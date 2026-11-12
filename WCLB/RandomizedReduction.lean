@@ -1,4 +1,4 @@
-import WCLB.Family
+import WCLB.JointMeasurability
 import WCLB.AdaptiveConcentration
 import WCLB.Budget
 
@@ -157,5 +157,68 @@ theorem randomized_reduction {M N d : ℕ} [NeZero d]
     rw [hexp]
     exact hbudget)
   simpa only [ENNReal.ofReal_sub 1 hδ.le, ENNReal.ofReal_one] using hh
+
+/-- Average the measurable joint event in Lemma 11 over the frame. The
+resulting frame is fixed independently of the algorithm's private seed. -/
+theorem randomized_reduction_fixed_frame {M N d : ℕ} [NeZero d]
+    (e : Fin M × Fin N ↪ Fin d) (hM : 2 ≤ M) (hN : 256 ≤ N)
+    (hMmax : M ≤ 2 ^ (8 * N)) (A : WC.Model.BorelAlgorithm)
+    (out : WC.Model.BorelOutputRule d ((M - 1) * stagger N))
+    {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1)
+    (hdim : logarithmicDimensionBound (M * N) ((M - 1) * stagger N) d
+      (radialRadius M N) (robustTolerance M N) δ) :
+    ∃ g : Orthogonal d, ENNReal.ofReal (1 - δ) ≤ WC.Model.seedMeasure
+      {s | (chainFamily e hM hN hMmax).BarrierEvent A out g s} :=
+  Probability.exists_section_ge (Frame.haar (Ambient d)) WC.Model.seedMeasure _
+    (family_barrierEvent_measurable _ A out) _
+    (randomized_reduction e hM hN hMmax A out hδ hδ1 hdim)
+
+open WC.LowerReduction
+
+/-- The joint failure event in Section 6.3, in the physical problem at the
+logarithmic dimension (6.5). The same instance works at every time through T. -/
+theorem physical_joint_barrier_logarithmic {M N d : ℕ} [NeZero d]
+    (e : Fin M × Fin N ↪ Fin d) (hM : 2 ≤ M) (hN : 256 ≤ N)
+    (hMmax : M ≤ 2 ^ (8 * N)) {G ρ Δ ε δ : ℝ} (hG : 0 < G) (hρ : 0 < ρ)
+    (hδ : 0 < δ) (hδ1 : δ < 1)
+    (hgap : (G ^ 2 / ρ) * (3 * (M : ℝ) / N) ≤ Δ)
+    (hε : ε ≤ G * (1 / (32 * Real.sqrt N)))
+    (hdim : logarithmicDimensionBound (M * N) ((M - 1) * stagger N) d
+      (radialRadius M N) (robustTolerance M N) δ)
+    (A : WC.Model.BorelAlgorithm) :
+    ∃ I : WC.Model.Instance G ρ Δ, I.dimension = d ∧
+      ENNReal.ofReal (1 - δ) ≤ WC.Model.seedMeasure {s | ∀ t ≤ (M - 1) * stagger N,
+        ε < ‖gradient (moreauEnvelope (1 / (2 * ρ)) I.objective)
+          (WC.Model.trajectory hG.le hρ.le A I s t)‖} := by
+  let H := chainFamily e hM hN hMmax
+  let B := scaleAlgorithm G ρ A
+  obtain ⟨g, hg⟩ := randomized_reduction_fixed_frame e hM hN hMmax B
+    (queryOutput B d ((M - 1) * stagger N)) hδ hδ1 hdim
+  refine ⟨physicalInstance hG hρ (H.instanceOf g) hgap, rfl, hg.trans (measure_mono ?_)⟩
+  intro s hs t ht
+  exact hε.trans_lt (physical_barrier_transport H hG hρ hgap A hs t ht)
+
+/-- The fixed-instance marginal bound used in the complexity definition. -/
+theorem physical_hard_instance_logarithmic {M N d : ℕ} [NeZero d]
+    (e : Fin M × Fin N ↪ Fin d) (hM : 2 ≤ M) (hN : 256 ≤ N)
+    (hMmax : M ≤ 2 ^ (8 * N)) {G ρ Δ ε ν : ℝ} (hG : 0 < G) (hρ : 0 < ρ)
+    (hν : 0 ≤ ν) (hν_one : ν < 1)
+    (hgap : (G ^ 2 / ρ) * (3 * (M : ℝ) / N) ≤ Δ)
+    (hε : ε ≤ G * (1 / (32 * Real.sqrt N)))
+    (hdim : logarithmicDimensionBound (M * N) ((M - 1) * stagger N) d
+      (radialRadius M N) (robustTolerance M N) ((1 - ν) / 2))
+    (A : WC.Model.BorelAlgorithm) :
+    ∃ I : WC.Model.Instance G ρ Δ, I.dimension = d ∧ ∀ t ≤ (M - 1) * stagger N,
+      WC.Model.successProbability hG.le hρ.le A I ε t < ENNReal.ofReal (1 - ν) := by
+  let δ := (1 - ν) / 2
+  have hδ : 0 < δ := by dsimp [δ]; linarith
+  have hδ1 : δ < 1 := by dsimp [δ]; linarith
+  obtain ⟨I, hI, hbar⟩ := physical_joint_barrier_logarithmic e hM hN hMmax hG hρ
+    hδ hδ1 hgap hε hdim A
+  refine ⟨I, hI, fun t ht => ?_⟩
+  have hprob := probability_le_of_disjoint_barrier WC.Model.seedMeasure
+    (WC.Model.stationarity_success_measurable hG.le hρ A I ε t) hδ.le hδ1.le hbar
+    (fun s hs => not_le.mpr (hs t ht))
+  exact hprob.trans_lt ((ENNReal.ofReal_lt_ofReal_iff (by linarith)).mpr (by dsimp [δ]; linarith))
 
 end WCLB
